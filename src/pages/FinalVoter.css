@@ -1,0 +1,254 @@
+
+/* one row 2 cards total6 */
+
+/* @media print {
+
+
+  @page {
+    size: A4;
+    margin: 6mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .bulk-print-container,
+  .bulk-print-container * {
+    visibility: visible;
+  }
+
+  .bulk-print-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    grid-template-rows: repeat(3, auto);   
+
+    gap: 6px;     
+    padding: 4px;    
+  }
+
+  .bulk-voter-card {
+    page-break-inside: avoid;
+    transform: scale(0.95);   
+    transform-origin: top left;
+  }
+}
+
+@media print {
+
+  @page {
+    size: A4;
+    margin: 6mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .bulk-print-container,
+  .bulk-print-container * {
+    visibility: visible;
+  }
+
+  .bulk-print-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 6px;
+    padding: 4px;
+  }
+
+  .bulk-voter-card {
+    page-break-inside: avoid;
+    transform: scale(0.95); 
+    transform-origin: top left;
+  }
+} */
+
+
+
+/* ======================= */
+/* 1 row 3 jevadhe basatil tevadhe */
+/* @media print {
+
+  
+  @page {
+    size: A4;
+    margin: 1mm;  
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .bulk-print-container,
+  .bulk-print-container * {
+    visibility: visible;
+  }
+
+  .bulk-print-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: grid;
+
+    
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 4px;      
+    padding: 2px;   
+  }
+
+  .bulk-voter-card {
+    page-break-inside: avoid;
+    transform: scale(0.95);
+    transform-origin: top left;
+  }
+} */
+
+
+/* ====================== */
+/* @media print {
+
+  @page {
+    size: A4;
+    margin: 1mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .bulk-print-container,
+  .bulk-print-container * {
+    visibility: visible;
+  }
+
+  .bulk-print-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    
+    align-items: start;          
+    grid-auto-rows: min-content; 
+
+    gap: 4px;
+    padding: 2px;
+  }
+
+  .bulk-voter-card {
+    page-break-inside: avoid;
+
+    align-self: start;          
+    height: auto;                
+
+    transform: scale(0.95);
+    transform-origin: top left;
+  }
+} */
+
+
+/* ======================= */
+
+
+
+
+
+@media print {
+
+  @page {
+    size: A4;
+    margin: 5mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .bulk-print-container,
+  .bulk-print-container * {
+    visibility: visible;
+  }
+
+  .bulk-print-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: grid;
+
+    /* 🔥 3 columns */
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+    padding: 4px;
+
+    align-items: start;
+    grid-auto-rows: min-content;
+
+     row-gap: 30px;
+  }
+
+  /* 🔥 प्रत्येक 6 cards नंतर नवीन page */
+  .bulk-voter-card:nth-child(6n) {
+    page-break-after: always;
+  }
+
+  .bulk-voter-card {
+    page-break-inside: avoid;
+    align-self: start;
+  }
+}
+
+
+@media print {
+
+  body * {
+    visibility: hidden;
+  }
+
+  .print-slip-wrapper,
+  .print-slip-wrapper * {
+    visibility: visible;
+  }
+
+  .print-slip-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+
+  .print-slip {
+    width: 5.8cm;      /* ✅ 58mm standard printer */
+    height: auto;     /* ✅ content नुसार height */
+    padding: 4mm;
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.3;
+
+    border: 1px solid #000;
+  }
+
+  .print-slip p {
+    margin: 2px 0;
+  }
+}

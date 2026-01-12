@@ -1,0 +1,138 @@
+/* one page 6 image  basale */
+
+/* .bulk-voter-card {
+  width: 100%;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 10.5px;        
+  box-sizing: border-box;
+} */
+
+
+/* .bulk-voter-banner {
+  width: 100%;
+  height: 80px;           
+  object-fit: contain;      
+  display: block;
+} */
+ /* 🔶 TOP IMAGE – EXACT SCREENSHOT STYLE */
+/* .bulk-voter-banner {
+  width: 100%;      
+  height: auto;     
+  display: block;
+} */
+
+
+/* 🔶 BODY */
+/* .bulk-voter-body {
+  padding: 4px 6px;         
+}
+
+.bulk-voter-body p {
+  margin: 1px 0;           
+  line-height: 1.2;
+  color: #000;
+} */
+
+/* ======================= */
+/* css for 3 cards one row */
+
+/* .bulk-voter-card {
+  width: 100%;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 10px;          
+  box-sizing: border-box;
+}
+
+
+.bulk-voter-body {
+  padding: 3px 5px;
+}
+
+
+.bulk-voter-body p {
+  margin: 1px 0;
+  line-height: 1.15;
+} */
+
+
+
+/* ============================ */
+
+
+/* .bulk-voter-card {
+  width: 100%;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 10px;
+  box-sizing: border-box;
+}
+
+
+.bulk-voter-banner {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+.bulk-voter-body {
+  padding: 3px 5px;
+}
+
+.bulk-voter-body p {
+  margin: 1px 0;
+  line-height: 1.15;
+  color: #000;
+} */
+
+/* =========================== */
+
+.bulk-voter-card {
+  width: 100%;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 12.5px;        /* 🔥 text size वाढवली */
+  box-sizing: border-box;
+}
+
+/* IMAGE same ठेव */
+.bulk-voter-banner {
+  width: 100%;
+  height: 20%;
+  display: block;
+}
+
+/* BODY – height वाढवली */
+.bulk-voter-body {
+  /* padding: 6px 8px;      */
+    /* padding: 4px 6px;       */
+    padding: 1px 5px 0px 5px; 
+    min-height: 200px;
+    margin-top: 10px;
+}
+
+.bulk-voter-body p {
+  margin: 8px 0;         /* 🔥 vertical space वाढली */
+  line-height: 1.00;     /* 🔥 height वाढवली */
+  color: #000;
+}
+
+
+/* ------------------------ */
+
+/* 🔥 LABELS BOLD (important part) */
+.bulk-voter-body b {
+  font-weight: 700;      /* 🔥 labels clear bold */
+}
+.booth-line { 
+ margin-top: 8px;        /* वरचा gap */
+  padding-top: 4px;       /* line break नंतर breathing space */
+  line-height: 1.25;      /* multi-line text neat दिसेल */
+  word-break: break-word; /* long BoothName नीट तुटेल */
+}
+.booth-name {
+  display: block;     /* 🔥 forced next line */
+  line-height: 1.25;
+}
