@@ -1470,20 +1470,24 @@ width: {
     }}
   /> */}
 
-<img
- src="https://res.cloudinary.com/dsg5ctnc0/image/upload/v1768061618/RBG7230485_a7d5jj.jpg"
 
+<img
+  src={`https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${selectedVoter.voterId}.webp`}
   alt="Voter"
   style={{
-    width: '95%',
-    maxWidth: '100%',
-    height: 'auto',
-    objectFit: 'contain',
+    width: "95%",
+    maxWidth: "100%",
+    height: "auto",
+    objectFit: "contain",
   }}
   onError={(e) => {
-    e.target.src = '/images/no-image.jpg';
+    e.target.src = "/images/no-image.jpg";
   }}
 />
+
+
+
+
 
           </Grid>
 
