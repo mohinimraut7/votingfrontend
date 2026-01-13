@@ -1683,6 +1683,7 @@ width: {
   );
 };
 
+
 export default FinalVoters;
 
 /* ================= STYLED GRID ================= */
