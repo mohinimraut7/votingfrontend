@@ -218,11 +218,18 @@
   }
 }
 
+.print-slip-wrapper {
+  display: none;
+}
+
 
 @media print {
 
   body * {
     visibility: hidden;
+  }
+.print-slip-wrapper {
+    display: block !important;
   }
 
   .print-slip-wrapper,
