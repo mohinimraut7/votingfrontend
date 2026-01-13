@@ -159,7 +159,7 @@
     align-self: start;          
     height: auto;                
 
-    transform: scale(0.95);
+    transform: scale(0.95) ;
     transform-origin: top left;
   }
 } */
@@ -223,11 +223,12 @@
 }
 
 
-/* @media print {
+@media print {
 
   body * {
     visibility: hidden;
   }
+
 .print-slip-wrapper {
     display: block !important;
   }
@@ -258,23 +259,23 @@
   .print-slip p {
     margin: 2px 0;
   }
-} */
+}
 
 
 
-@media print and (max-width: 600px) {
+/* @media print and (max-width: 600px) {
   @page {
-    size: 5.3cm 10.5cm;  /* ✅ width height */
+    size: 5.3cm 10.5cm; 
     margin: 0;
   }
 
   .print-slip-wrapper {
-    left: -2mm; /* ✅ optional (जर left shift हवा असेल तर) */
+    left: -2mm; 
   }
 
   .print-slip {
-    width: 5.3cm;       /* ✅ 5:30cm */
-    height: 10.5cm;     /* ✅ 10.5cm fixed */
+    width: 5.3cm;      
+    height: 10.5cm;     
     padding: 3mm;
 
     font-family: Arial, sans-serif;
@@ -284,4 +285,4 @@
     border: 1px solid #000;
     overflow: hidden;
   }
-}
+} */
