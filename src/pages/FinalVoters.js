@@ -713,13 +713,27 @@ const generateSinglePDF = async (voters, index) => {
 //   setTimeout(() => window.print(), 100);
 // };
 
+// const handlePrintSlip = () => {
+//   setPrintMode("SLIP");
+
+//   setTimeout(() => {
+//     window.print();
+
+//     // ✅ print झाल्यावर UI मधून slip हटेल
+//     setTimeout(() => setPrintMode(null), 500);
+//   }, 200);
+// };
+
 const handlePrintSlip = () => {
   setPrintMode("SLIP");
 
   setTimeout(() => {
-    window.print();
+    if (window.AndroidPrinter) {
+      window.AndroidPrinter.printSlip("SLIP");
+    } else {
+      alert("Printer not connected");
+    }
 
-    // ✅ print झाल्यावर UI मधून slip हटेल
     setTimeout(() => setPrintMode(null), 500);
   }, 200);
 };
