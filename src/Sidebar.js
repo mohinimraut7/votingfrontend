@@ -56,7 +56,7 @@ export default function Sidebar() {
     // { label: 'Voters', icon: <Person />, path: '/votermaster' },
       // { label: 'FinalVoters', icon: <Person />, path: '/finalvoters' },
     { label: 'Users', icon: <Person />, path: '/users' },
-    { label: 'Roles', icon: <AccessibilityIcon />, path: '/rolemaster' },
+    // { label: 'Roles', icon: <AccessibilityIcon />, path: '/rolemaster' },
   ];
 
   if (isAuthPage) return null;
