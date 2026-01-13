@@ -1692,7 +1692,7 @@ const StyledDataGrid = styled(DataGrid)(() => ({
   backgroundColor: '#fff',
   height: '600px',
   '& .MuiDataGrid-virtualScroller': {
-    overflowX: 'hidden',
+    overflowX: 'auto',  /* ✅ horizontal scroll allow */
   },
   '& .MuiDataGrid-columnHeaders': {
     backgroundColor: '#f8f9fa',

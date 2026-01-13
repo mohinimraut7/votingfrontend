@@ -223,7 +223,7 @@
 }
 
 
-@media print {
+/* @media print {
 
   body * {
     visibility: hidden;
@@ -244,8 +244,8 @@
   }
 
   .print-slip {
-    width: 5.8cm;      /* ✅ 58mm standard printer */
-    height: auto;     /* ✅ content नुसार height */
+    width: 5.8cm;      
+    height: auto;     
     padding: 4mm;
 
     font-family: Arial, sans-serif;
@@ -257,5 +257,31 @@
 
   .print-slip p {
     margin: 2px 0;
+  }
+} */
+
+
+
+@media print and (max-width: 600px) {
+  @page {
+    size: 5.3cm 10.5cm;  /* ✅ width height */
+    margin: 0;
+  }
+
+  .print-slip-wrapper {
+    left: -2mm; /* ✅ optional (जर left shift हवा असेल तर) */
+  }
+
+  .print-slip {
+    width: 5.3cm;       /* ✅ 5:30cm */
+    height: 10.5cm;     /* ✅ 10.5cm fixed */
+    padding: 3mm;
+
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.2;
+
+    border: 1px solid #000;
+    overflow: hidden;
   }
 }
