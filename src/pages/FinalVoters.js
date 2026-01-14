@@ -157,36 +157,7 @@ const columns = (handleDelete, handleEdit) => [
   { field: 'wardNumber', headerName: 'Ward', width: 80 },
   
  
-  // { field: 'voterId', headerName: 'Voter ID', width: 150 },
-//   {
-//   field: 'voterId',
-//   headerName: 'Voter ID',
-//   width: 150,
-//   renderCell: (params) => {
-//     const voterId = params.value;
-//     const url = `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`;
-
-//     return (
-//       <a
-//         href={url}
-//         target="_blank"
-//         rel="noopener noreferrer"
-//         style={{
-//           color: '#1976D2',
-//           textDecoration: 'underline',
-//           fontWeight: 600,
-//           cursor: 'pointer',
-//         }}
-//         onClick={(e) => e.stopPropagation()} // 🔥 row click prevent
-//       >
-//         {voterId}
-//       </a>
-//     );
-//   },
-// },
-
-// ======================
-
+ 
 
 
 
@@ -206,47 +177,13 @@ const columns = (handleDelete, handleEdit) => [
     sortable: false,
     renderCell: (params) => (
       <Box sx={{ display: 'flex', gap: 1 }}>
-        {/* <IconButton
-          size="small"
-          sx={{ color: '#e53935' }}
-          onClick={() => handleDelete(params.row._id)}
-        >
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          size="small"
-          sx={{ color: '#1e88e5' }}
-          onClick={() => handleEdit(params.row)}
-        >
-          <EditIcon fontSize="small" />
-        </IconButton> */}
+       
       </Box>
     ),
   },
 ];
 
-  /* ================= FETCH ================= */
-  // const fetchVoters = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     const res = await axios.get(API_URL, {
-  //       params: {
-  //         page: paginationModel.page + 1,
-  //         limit: paginationModel.pageSize,
-  //         search: appliedSearch,
-  //       },
-  //     });
-
-  //     setVoters(res.data.voters || []);
-  //     setTotal(res.data.pagination.totalVoters);
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error('Failed to fetch voters');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  
 
    const fetchVoters = async () => {
     try {
@@ -339,37 +276,12 @@ const handleRefresh = () => {
     XLSX.utils.book_append_sheet(wb, ws, 'Voters');
     XLSX.writeFile(wb, 'Voter_Master.xlsx');
   };
-// const downloadAllSlips = () => {
-//     if (!voters.length) {
-//       toast.warn('No data');
-//       return;
-//     }
-
-//     const ws = XLSX.utils.json_to_sheet(voters);
-//     const wb = XLSX.utils.book_new();
-//     XLSX.utils.book_append_sheet(wb, ws, 'Voters');
-//     XLSX.writeFile(wb, 'Voter_Master.xlsx');
-//   };
 
 
 
 
 
-// const downloadAllSlips = () => {
-//   if (!voters.length) {
-//     toast.warn('No data');
-//     return;
-//   }
 
-//   setShowBulkSlips(true);
-
-//   setTimeout(() => {
-//     window.print();   // 👈 print preview
-//   }, 300);
-// };
-
-// ====================
-// slot wise
 
 const downloadAllSlips = () => {
   if (!voters.length) {
@@ -390,56 +302,7 @@ const downloadAllSlips = () => {
   }, 300);
 };
 
-// ==================
 
-// const downloadAllSlips = async () => {
-//   try {
-//     toast.info("Fetching all voters for PDF, please wait...");
-
-//     const res = await axios.get(API_URL, {
-//       params: {
-//         page: 1,
-//         limit: 20000,
-//         search: appliedSearch || ""
-//       }
-//     });
-
-//     const allVoters = res.data.voters || [];
-
-//     if (!allVoters.length) {
-//       toast.warn("No data found");
-//       return;
-//     }
-
-//     toast.success(`Loaded ${allVoters.length} voters. Preparing PDF...`);
-
-//     setVoters(allVoters);
-//     setShowBulkSlips(true);
-
-//     setTimeout(() => {
-//       window.print();
-
-//       setTimeout(() => {
-//         setShowBulkSlips(false);
-//         fetchVoters();
-//       }, 500);
-//     }, 800);
-
-//   } catch (err) {
-//     console.error(err);
-//     toast.error("Failed to fetch all voters");
-//   }
-// };
-
-
-
-// const chunkArray = (arr, size) => {
-//   const chunks = [];
-//   for (let i = 0; i < arr.length; i += size) {
-//     chunks.push(arr.slice(i, i + size));
-//   }
-//   return chunks;
-// };
 const chunkArray = (arr, size) => {
   const chunks = [];
   for (let i = 0; i < arr.length; i += size) {
@@ -449,301 +312,6 @@ const chunkArray = (arr, size) => {
 };
 
 
-// const downloadAllSlips = async () => {
-//   try {
-//     toast.info("Fetching all voters for PDF, please wait...");
-
-//     const res = await axios.get(API_URL, {
-//       params: {
-//         page: 1,
-//         limit: 20000,        // 🔥 large data
-//         search: appliedSearch || ""
-//       }
-//     });
-
-//     const allVoters = res.data.voters || [];
-
-//     if (!allVoters.length) {
-//       toast.warn("No data found");
-//       return;
-//     }
-
-//     toast.success(`Loaded ${allVoters.length} voters. Generating PDF...`);
-
-//     /* -----------------------------
-//        🔥 IMPORTANT PART START
-//        NO setShowBulkSlips
-//        NO React render
-//     ------------------------------*/
-
-//     // 1️⃣ hidden container
-//     const wrapper = document.createElement("div");
-//     wrapper.style.position = "fixed";
-//     wrapper.style.left = "-9999px"; // 👈 screen वर दिसणार नाही
-
-//     // 2️⃣ same design HTML (BulkVoterCard सारखाच)
-//     // wrapper.innerHTML = `
-//     //   <div style="padding:8mm">
-//     //     <div style="
-//     //       display:grid;
-//     //       grid-template-columns:repeat(3,1fr);
-//     //       gap:6mm;
-//     //     ">
-//     //       ${allVoters.map(voter => `
-//     //         <div style="
-//     //           border:1px solid #000;
-//     //           height:240px;
-//     //           display:flex;
-//     //           flex-direction:column;
-//     //           overflow:hidden;
-//     //           font-size:12px;
-//     //         ">
-//     //           <img
-//     //             src="${voterSlipImg}"
-//     //             style="width:100%;height:80px;object-fit:cover;"
-//     //           />
-//     //           <div style="padding:2mm 3mm;flex:1;">
-//     //             <p><b>Voter ID :</b> ${voter.voterId || ""} &nbsp;&nbsp; <b>Ward :</b> ${voter.wardNumber || ""}</p>
-//     //             <p><b>Name :</b> ${voter.name || ""}</p>
-//     //             <p><b>Sr No :</b> ${voter.srn || ""} &nbsp;&nbsp; <b>Building :</b> ${voter.BuildingName || ""}</p>
-//     //             <p><b>Address :</b> ${voter.houseNo || ""}</p>
-//     //             <hr/>
-//     //             <p><b>Booth :</b> ${voter.boothNumber || ""} - ${voter.BoothName || ""}</p>
-//     //           </div>
-//     //         </div>
-//     //       `).join("")}
-//     //     </div>
-//     //   </div>
-//     // `;
-
-
-//     const pages = chunkArray(allVoters, 6);
-
-// wrapper.innerHTML = `
-//   <div style="padding:8mm">
-//     ${pages.map(page => `
-//       <div style="
-//         display:grid;
-//         grid-template-columns:repeat(3,1fr);
-//         gap:6mm;
-//         page-break-after: always;
-//       ">
-//         ${page.map(voter => `
-//           <div style="
-//             border:1px solid #000;
-//             height:240px;
-//             display:flex;
-//             flex-direction:column;
-//             overflow:hidden;
-//             font-size:12px;
-//           ">
-//             <img
-//               src="${voterSlipImg}"
-//               style="width:100%;height:80px;object-fit:cover;"
-//             />
-//             <div style="padding:2mm 3mm;flex:1;">
-//               <p><b>Voter ID :</b> ${voter.voterId || ""} &nbsp;&nbsp; <b>Ward :</b> ${voter.wardNumber || ""}</p>
-//               <p><b>Name :</b> ${voter.name || ""}</p>
-//               <p><b>Sr No :</b> ${voter.srn || ""}</p>
-//               <p><b>Building Name :</b> ${voter.BuildingName || ""}</p>
-//               <p><b>Address :</b> ${voter.houseNo || ""}</p>
-//               <hr/>
-//               <p><b>Booth :</b> ${voter.boothNumber || ""} - ${voter.BoothName || ""}</p>
-//             </div>
-//           </div>
-//         `).join("")}
-//       </div>
-//     `).join("")}
-//   </div>
-// `;
-
-//     document.body.appendChild(wrapper);
-
-//     // 3️⃣ DIRECT PDF DOWNLOAD (NO preview)
-//     await html2pdf()
-//       .set({
-//         margin: [8, 8, 8, 8],
-//         filename: "Voter_SlipsNew.pdf",
-//         html2canvas: { scale: 2, useCORS: true },
-//         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-//         pagebreak: { mode: ["css", "legacy"] },
-//       })
-//       .from(wrapper)
-//       .save();
-
-//     document.body.removeChild(wrapper);
-
-//     toast.success("Voter slips PDF downloaded successfully");
-
-//   } catch (err) {
-//     console.error(err);
-//     toast.error("Failed to download voter slips");
-//   }
-// };
-
-
-// directly download pdf
-
-// const downloadAllSlips = () => {
-//   if (!voters.length) {
-//     toast.warn('No data');
-//     return;
-//   }
-
-//   setShowBulkSlips(true);
-
-//   setTimeout(() => {
-//     const element = document.getElementById('bulk-slip-container');
-
-//     const opt = {
-//       margin: 5,
-//       filename: 'Voter_Slips.pdf',
-//       image: { type: 'jpeg', quality: 0.98 },
-//       html2canvas: {
-//         scale: 2,
-//         useCORS: true
-//       },
-//       jsPDF: {
-//         unit: 'mm',
-//         format: 'a4',
-//         orientation: 'portrait'
-//       }
-//     };
-
-//     html2pdf().set(opt).from(element).save(); // 👈 DIRECT DOWNLOAD
-//   }, 300);
-// };
-
-
-
-// const downloadAllSlips = () => {
-//   if (!voters.length) {
-//     toast.warn('No data');
-//     return;
-//   }
-
-//   setShowBulkSlips(true);
-
-//   setTimeout(() => {
-//     window.print();   // Save as PDF = softcopy
-//   }, 300);
-// };
-
-  
-// const downloadAllSlips = async () => {
-//   try {
-//     toast.info("Fetching all voters for print...");
-
-//     const res = await axios.get(API_URL, {
-//       params: {
-//         page: 1,
-//         limit: 15804, // 🔥 ALL DATA IN ONE SHOT
-//         search: appliedSearch || ""
-//       }
-//     });
-
-//     const allVoters = res.data.voters || [];
-
-//     if (!allVoters.length) {
-//       toast.warn("No data");
-//       return;
-//     }
-
-//     setVoters(allVoters);     // 🔥 overwrite current page data
-//     setShowBulkSlips(true);
-
-//     setTimeout(() => {
-//       window.print();         // Save as PDF
-//     }, 700);
-
-//   } catch (err) {
-//     console.error(err);
-//     toast.error("Failed to fetch all voters");
-//   }
-// };
-
-// const downloadAllSlips = async () => {
-//   try {
-//     toast.info("Preparing PDF, please wait...");
-
-//     const res = await axios.get(API_URL, {
-//       params: {
-//         page: 1,
-//         limit: 15804, // 🔥 ALL voters
-//         search: appliedSearch || ""
-//       }
-//     });
-
-//     const allVoters = res.data.voters || [];
-
-//     if (!allVoters.length) {
-//       toast.warn("No data");
-//       return;
-//     }
-
-//     setVoters(allVoters);
-//     setShowBulkSlips(true);
-
-//     setTimeout(() => {
-//       const element = document.querySelector(".bulk-print-container");
-
-//       html2pdf()
-//         .from(element)
-//         .set({
-//           margin: 5,
-//           filename: "Bulk_Voter_Slips.pdf",
-//           image: { type: "jpeg", quality: 0.98 },
-//           html2canvas: {
-//             scale: 2,
-//             useCORS: true,
-//           },
-//           jsPDF: {
-//             unit: "mm",
-//             format: "a4",
-//             orientation: "portrait",
-//           },
-//           pagebreak: { mode: ["css", "legacy"] },
-//         })
-//         .save();   // 🔥 DIRECT DOWNLOAD
-
-//     }, 800);
-
-//   } catch (err) {
-//     console.error(err);
-//     toast.error("Failed to generate PDF");
-//   }
-// };
-
-// const downloadAllSlips = async () => {
-//   try {
-//     toast.info("Fetching all voters...");
-
-//     const res = await axios.get(API_URL, {
-//       params: { page: 1, limit: 20000, search: appliedSearch || "" }
-//     });
-
-//     const allVoters = res.data.voters || [];
-//     if (!allVoters.length) return toast.warn("No data");
-
-//     const batches = chunkArray(allVoters, 300); // 🔥 SAFE LIMIT
-//     toast.success(`Total ${batches.length} PDFs will be generated`);
-
-//     for (let i = 0; i < batches.length; i++) {
-//       toast.info(`Generating PDF ${i + 1}/${batches.length}`);
-
-//       await generateSinglePDF(batches[i], i + 1);
-
-//       // 🧠 browser ला श्वास घेऊ दे
-//       await new Promise(r => setTimeout(r, 300));
-//     }
-
-//     toast.success("All PDFs downloaded successfully ✅");
-
-//   } catch (e) {
-//     console.error(e);
-//     toast.error("PDF generation failed");
-//   }
-// };
 
 
 const generateSinglePDF = async (voters, index) => {
@@ -795,11 +363,7 @@ const generateSinglePDF = async (voters, index) => {
 };
 
 
-  const handlePrintA4 = () => {
-  setPrintMode('A4');
-  setTimeout(() => window.print(), 100);
-};
-
+ 
 
 
 // const handlePrintSlip = () => {
@@ -808,25 +372,16 @@ const generateSinglePDF = async (voters, index) => {
 // };
 
 const handlePrintSlip = () => {
-  setPrintMode("SLIP");
-
-  const printData = {
+  const payload = {
     slipType: "SLIP",
-    voterId: selectedVoter.voterId,
-    name: selectedVoter.name,
-    ward: selectedVoter.wardNumber,
-    booth: selectedVoter.boothNumber,
-    village: selectedVoter.village,
-    flag: selectedVoter.flag,
+    voterId: selectedVoter?.voterId || "",
+    name: selectedVoter?.name || "",
+    ward: selectedVoter?.wardNumber || "",
+    booth: selectedVoter?.boothNumber || "",
     date: new Date().toLocaleString(),
   };
 
-  setTimeout(() => {
-    window.print(printData);
-
-    // UI reset after print
-    setTimeout(() => setPrintMode(null), 500);
-  }, 200);
+  window.print(JSON.stringify(payload));
 };
 
   /* ================= LOADING ================= */
