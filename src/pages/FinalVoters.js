@@ -40,6 +40,7 @@ import voterSlipImg from "../Images/voterslipbanner.jpg"
 import BulkVoterCard from './BulkVoterCard';
 import html2pdf from "html2pdf.js";
 // import { bannerBase64 } from '../../public/bannerBase64';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 
 
@@ -91,6 +92,9 @@ const [showBulkSlips, setShowBulkSlips] = useState(false);
 const [imageModalOpen, setImageModalOpen] = useState(false);
 const [imageUrl, setImageUrl] = useState('');
 const [photoExists, setPhotoExists] = useState({});
+const [visitedChecked, setVisitedChecked] = useState(false);
+
+
 const checkImageExists = (voterId) => {
   if (photoExists[voterId] !== undefined) return;
 
@@ -106,6 +110,14 @@ const checkImageExists = (voterId) => {
   };
 };
 
+const handleVisitedChange = (e) => {
+  const checked = e.target.checked;
+  setVisitedChecked(checked);
+
+  if (checked) {
+    toast.success("✅ Voter Visited");
+  }
+};
 
 
 const columns = (handleDelete, handleEdit) => [
@@ -413,6 +425,7 @@ const handlePrintSlip = () => {
     name: selectedVoter?.name || "",
     ward: selectedVoter?.wardNumber || "",
     booth: selectedVoter?.boothNumber || "",
+    boothName: selectedVoter?.boothName || "",
     date: new Date().toLocaleString(),
   };
 
@@ -617,7 +630,7 @@ width: {
         >
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              Voter Details - 1
+              Voter Details
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.85 }}>
               Election Commission – Voter Information
@@ -789,7 +802,11 @@ width: {
             </Box>
           </Grid> */}
 
-          <Grid item xs={12} md={8} sx={{ p: 4 }}>
+
+
+          
+
+          {/* <Grid item xs={12} md={8} sx={{ p: 4 }}>
   <Grid container spacing={2}>
     {(() => {
       const hiddenFields = [
@@ -841,7 +858,7 @@ width: {
         color: key === 'flag' ? 'red' : '#111827',
       }}
     >
-      {/* 🔥 FLAG LOGIC */}
+    
       {key === 'flag'
         ? selectedVoter.flag === 'twice'
           ? 'DUBAR'
@@ -849,6 +866,8 @@ width: {
         : selectedVoter[key] || '-'}
     </Typography>
   </Box>
+
+  
 </Grid>
 
           );
@@ -862,7 +881,132 @@ width: {
       This is an official voter information record.
     </Typography>
   </Box>
+</Grid> */}
+
+
+
+
+  <Grid item xs={12} md={8} sx={{ p: 4 }}>
+            <Grid container spacing={2}>
+              {(() => {
+                const hiddenFields = [
+                  '_id',
+                  '__v',
+                  'firstName',
+                  'middleName',
+                  'lastName',
+                  'colorCode',
+                ];
+
+                const orderedPairs = [
+                  ['corporation', 'wardNumber'],
+                  ['voterId', 'name'],
+                  ['boothNumber', 'village'],
+                  ['srnNo', 'assemblyNo'],
+                  ['houseNo', 'PartNo'],
+                  ['mobileOne', 'mobileTwo'],
+                  ['boothName', "flag"],
+                ];
+
+                return orderedPairs.map((pair, rowIndex) =>
+                  pair.map((key) => {
+                    if (!key) return null;
+                    if (hiddenFields.includes(key)) return null;
+                    if (!(key in selectedVoter)) return null;
+
+
+
+
+                    
+
+                    return (
+                     
+
+
+<Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
+ 
+
+  <Box
+  sx={{
+    py: 0.5,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1.5,
+    width: '100%',
+  }}
+>
+  {/* 🔹 LABEL – 40% */}
+  <Typography
+    variant="caption"
+    sx={{
+      color: '#374151',
+      fontWeight: 600,
+      letterSpacing: '0.04em',
+      fontSize: '13px',
+      textTransform: 'uppercase',
+
+      width: '35%',            // 🔥 40%
+   
+     
+    }}
+  >
+    {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+  </Typography>
+
+ 
+  <Typography
+    variant="body2"
+    sx={{
+      fontWeight: 600,
+      color: key === 'flag' ? 'red' : '#000',
+
+      width: '55%',            
+      
+    }}
+  >
+    {key === 'flag'
+      ? selectedVoter.flag === 'twice'
+        ? 'DUBAR'
+        : null
+      : selectedVoter[key] || '-'}
+  </Typography>
+</Box>
+
 </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    );
+                  })
+                );
+              })()}
+            </Grid>
+
+          
+            <Box sx={{ mt: 3 }}>
+              <Typography
+                variant="caption"
+                sx={{ color: '#6b7280' }}
+              >
+                This is an official voter information record.
+              </Typography>
+            </Box>
+          </Grid>
+
+
+
+
+
 
         </Grid>
       </Box>
@@ -949,7 +1093,7 @@ width: {
         >
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              Voter Details -2
+              Voter Details
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.85 }}>
               Election Commission – Voter Information
@@ -1057,135 +1201,11 @@ width: {
                     
 
                     return (
-                      // <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-                      //   <Box sx={{ py: 0.5 }}>
-                      //     <Typography
-                      //       variant="caption"
-                      //       sx={{
-                      //         color: '#6b7280',
-                      //         letterSpacing: '0.05em',
-                      //         fontSize: '11px',
-                      //       }}
-                      //     >
-                      //       {key
-                      //         .replace(/([A-Z])/g, ' $1')
-                      //         .toUpperCase()}
-                      //     </Typography>
-
-                      //     <Typography
-                      //       variant="body2"
-                      //       sx={{
-                      //         fontWeight: 600,
-                      //         color: '#111827',
-                      //       }}
-                      //     >
-                      //       {selectedVoter[key] || '-'}
-                      //     </Typography>
-                      //   </Box>
-                      // </Grid>
-// ==========================================
-
-//                       <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-//   <Box sx={{ py: 0.5 }}>
-//     <Typography
-//       variant="caption"
-//       sx={{
-//         color: '#6b7280',
-//         letterSpacing: '0.05em',
-//         fontSize: '11px',
-//       }}
-//     >
-//       {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
-//     </Typography>
-
-//     <Typography
-//       variant="body2"
-//       sx={{
-//         fontWeight: 600,
-//         color: '#111827',
-//         display: 'flex',
-//         alignItems: 'center',
-//         gap: 1,
-//       }}
-//     >
-//       {selectedVoter[key] || '-'}
-
-//       <Typography
-//   variant="body2"
-//   sx={{
-//     fontWeight: 600,
-//     color: '#111827',
-//   }}
-// >
-//   {key === 'flag'
-//     ? selectedVoter.flag === 'twice'
-//       ? 'DUBAR'
-//       : selectedVoter.flag
-//     : selectedVoter[key] || '-'}
-// </Typography>
-
-
-//       {/* 🔥 DUBAR FLAG ONLY FOR VILLAGE */}
-//       {/* {key === 'village' && selectedVoter.flag === 'twice' && (
-//         <span
-//           style={{
-//             color: 'red',
-//             fontWeight: 700,
-//             fontSize: '13px',
-//           }}
-//         >
-//           DUBAR
-//         </span>
-//       )} */}
-//     </Typography>
-//   </Box>
-// </Grid>
-
-
-// =============================
+                     
 
 
 <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-  {/* <Box sx={{ 
-    py: 0.5,
-      display: 'flex',         
-      alignItems: 'center',
-      gap: 1.5,
-    }}>
-    <Typography
-   
-      variant="caption"
-      sx={{
-        color: '#374151',      
-    fontWeight: 600,        
-    letterSpacing: '0.04em',
-    fontSize: '13px',      
-    textTransform: 'uppercase',
-     border:"2px solid white",
-     whiteSpace: 'nowrap',   // 🔥 LABEL ekach line
-    display: 'inline-block' // 🔥 wrap band
-      }}
-    >
-      {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
-    </Typography>
-
-    <Typography
-      variant="body2"
-      sx={{
-        fontWeight: 600,
-        color: key === 'flag' ? 'red' : '#000',  
-
-      }}
-    >
-   
-      {key === 'flag'
-        ? selectedVoter.flag === 'twice'
-          ? 'DUBAR'
-          : null
-        : selectedVoter[key] || '-'}
-    </Typography>
-  </Box> */}
-
+ 
 
   <Box
   sx={{
