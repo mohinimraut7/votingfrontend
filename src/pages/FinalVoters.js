@@ -40,13 +40,15 @@ import voterSlipImg from "../Images/voterslipbanner.jpg"
 import BulkVoterCard from './BulkVoterCard';
 import html2pdf from "html2pdf.js";
 // import { bannerBase64 } from '../../public/bannerBase64';
-import { Checkbox, FormControlLabel } from '@mui/material';
+
 
 
 
 import finvoters from '../data/finalvoters.json';
 // import dummyUser from "../Images/voterimages/FXG0649533.jpg";
 // import imagesvoters from '../Images/voterimages';
+
+import { Checkbox, FormControlLabel} from '@mui/material';
 
 console.log("Length:", finvoters?.length);
 
@@ -93,6 +95,8 @@ const [imageModalOpen, setImageModalOpen] = useState(false);
 const [imageUrl, setImageUrl] = useState('');
 const [photoExists, setPhotoExists] = useState({});
 const [visitedChecked, setVisitedChecked] = useState(false);
+const [checked, setChecked] = useState(false);
+const [checkedele, setCheckedEle] = useState(false);
 
 
 const checkImageExists = (voterId) => {
@@ -217,17 +221,17 @@ const columns = (handleDelete, handleEdit) => [
  
   { field: 'houseNo', headerName: 'Address', width: 260 },
  
-  {
-    field: 'actions',
-    headerName: 'Actions',
-    width: 120,
-    sortable: false,
-    renderCell: (params) => (
-      <Box sx={{ display: 'flex', gap: 1 }}>
+  // {
+  //   field: 'actions',
+  //   headerName: 'Actions',
+  //   width: 120,
+  //   sortable: false,
+  //   renderCell: (params) => (
+  //     <Box sx={{ display: 'flex', gap: 1 }}>
        
-      </Box>
-    ),
-  },
+  //     </Box>
+  //   ),
+  // },
 ];
 
   
@@ -426,6 +430,9 @@ const handlePrintSlip = () => {
     ward: selectedVoter?.wardNumber || "",
     booth: selectedVoter?.boothNumber || "",
     boothName: selectedVoter?.boothName || "",
+     srn: selectedVoter?.srn || "",
+      assemblyNo: selectedVoter?.assemblyNo|| "",
+
     date: new Date().toLocaleString(),
   };
 
@@ -591,9 +598,12 @@ width: {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             pageSizeOptions={[10, 50,96,100]}
-            getRowClassName={(params) =>
-    params.row.flag === "twice" ? "twice-voter-row" : ""
-  }
+          getRowClassName={(params) => {
+  let cls = params.row.flag === "twice" ? "twice-voter-row" : "";
+  // if (params.row.voterVisited === true) cls += " visited-voter-row";
+  return cls;
+}}
+
           />
         </Paper>
       </Container>
@@ -887,6 +897,57 @@ width: {
 
 
   <Grid item xs={12} md={8} sx={{ p: 4 }}>
+    {/* ***** */}
+{/* <FormControlLabel
+  control={
+    <Checkbox
+      checked={checked}
+      onChange={async (e) => {
+        const isChecked = e.target.checked;
+        setChecked(isChecked);
+
+        try {
+          await axios.put(
+            `${baseUrl}/getByVisitorAndUpdate/${selectedVoter.voterId}`,
+            { voterId:selectedVoter.voterId,
+              voterVisited: isChecked,
+            }
+          );
+
+          toast.success(
+            isChecked
+              ? "✅ Voter Visited"
+              : "ℹ️ Voter Visit Removed"
+          );
+
+          // 🔁 local state update (important)
+          setSelectedVoter(prev => ({
+            ...prev,
+            voterVisited: isChecked,
+          }));
+
+        } catch (error) {
+          toast.error("❌ Failed to update voter");
+
+          // ❌ rollback UI if API fails
+          setChecked(!isChecked);
+        }
+      }}
+      sx={{
+        '&.Mui-checked': {
+          color: '#16a34a',
+        },
+      }}
+    />
+  }
+  label={
+    <Typography sx={{ fontWeight: 600 }}>
+      Voter Visited
+    </Typography>
+  }
+/> */}
+
+
             <Grid container spacing={2}>
               {(() => {
                 const hiddenFields = [
@@ -1168,6 +1229,85 @@ width: {
 
         
           <Grid item xs={12} md={8} sx={{ p: 4 }}>
+
+            {/* <FormControlLabel
+  control={
+    <Checkbox
+      checked={checkedele}
+      onChange={(e) => {
+        setCheckedEle(e.target.checked);
+        if (e.target.checked) {
+          toast.success("✅ Voter Visited");
+        }
+      }}
+      sx={{
+        '&.Mui-checked': {
+          color: '#16a34a',
+        },
+      }}
+    />
+  }
+  label={
+    <Typography sx={{ fontWeight: 600 }}>
+      Voter Visited
+    </Typography>
+  }
+/> */}
+
+{/* ****2 */}
+{/* <FormControlLabel
+  control={
+    <Checkbox
+      checked={checkedele}
+      onChange={async (e) => {
+        const isChecked = e.target.checked;
+        setCheckedEle(isChecked);
+
+        try {
+          await axios.put(
+            `${baseUrl}/getByVisitorAndUpdate/${selectedVoter.voterId}`,
+            {
+              voterId: selectedVoter.voterId,
+              voterVisited: isChecked,
+            }
+          );
+
+          toast.success(
+            isChecked
+              ? "✅ Voter Visited"
+              : "ℹ️ Voter Visit Removed"
+          );
+
+          // 🔁 local voter update
+          setSelectedVoter(prev => ({
+            ...prev,
+            voterVisited: isChecked,
+          }));
+
+        } catch (error) {
+          toast.error("❌ Failed to update voter");
+
+          // ❌ rollback checkbox if API fails
+          setCheckedEle(!isChecked);
+        }
+      }}
+      sx={{
+        '&.Mui-checked': {
+          color: '#16a34a',
+        },
+      }}
+    />
+  }
+  label={
+    <Typography sx={{ fontWeight: 600 }}>
+      Voter Visited
+    </Typography>
+  }
+/> */}
+
+
+
+
             <Grid container spacing={2}>
               {(() => {
                 const hiddenFields = [
@@ -1187,6 +1327,7 @@ width: {
                   ['houseNo', 'PartNo'],
                   ['mobileOne', 'mobileTwo'],
                   ['boothName', "flag"],
+                  ['srn',null]
                 ];
 
                 return orderedPairs.map((pair, rowIndex) =>
@@ -1235,7 +1376,7 @@ width: {
   </Typography>
 
   {/* 🔹 VALUE – 60% */}
-  <Typography
+  {/* <Typography
     variant="body2"
     sx={{
       fontWeight: 600,
@@ -1250,7 +1391,23 @@ width: {
         ? 'DUBAR'
         : null
       : selectedVoter[key] || '-'}
-  </Typography>
+  </Typography> */}
+
+
+  <Typography
+  variant="body2"
+  sx={{
+    fontWeight: 600,
+    color: key === 'flags' ? 'red' : '#000',
+    width: '55%',
+  }}
+>
+  {key === 'flags'
+    ? selectedVoter.flags === 'twice'
+      ? 'DUBAR'
+      : '-'
+    : selectedVoter[key] || '-'}
+</Typography>
 </Box>
 
 </Grid>

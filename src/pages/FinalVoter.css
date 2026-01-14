@@ -268,3 +268,7 @@
   color: red !important;
   font-weight: 600;
 }
+
+.visited-voter-row{
+  background-color: yellow;
+}
