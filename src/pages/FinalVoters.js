@@ -109,25 +109,58 @@ const checkImageExists = (voterId) => {
 
 
 const columns = (handleDelete, handleEdit) => [
-  {
+//   {
+//   field: 'voterId',
+//   headerName: 'Voter ID',
+//   width: 150,
+//   renderCell: (params) => {
+//     const voterId = params.value;
+
+//     return (
+//       <span
+//         style={{
+//           color: '#1976D2',
+//           textDecoration: 'underline',
+//           fontWeight: 600,
+//           cursor: 'pointer',
+//         }}
+//         onClick={(e) => {
+//           e.stopPropagation();              // 🔥 DataGrid row click block
+//           setSelectedVoter(params.row);     // ✅ FULL voter object pass
+//           setImageModalOpen(true);          // ✅ SAME dialog open
+//         }}
+//       >
+//         {voterId}
+//       </span>
+//     );
+//   },
+// },
+
+{
   field: 'voterId',
   headerName: 'Voter ID',
   width: 150,
   renderCell: (params) => {
     const voterId = params.value;
 
+    // 🔥 image exists check trigger
+    checkImageExists(voterId);
+
+    const hasPhoto = photoExists[voterId];
+
     return (
       <span
         style={{
-          color: '#1976D2',
-          textDecoration: 'underline',
+          color: hasPhoto ? '#1976D2' : '#111827',
+          textDecoration: hasPhoto ? 'underline' : 'none',
           fontWeight: 600,
-          cursor: 'pointer',
+          cursor: hasPhoto ? 'pointer' : 'default',
         }}
         onClick={(e) => {
-          e.stopPropagation();              // 🔥 DataGrid row click block
-          setSelectedVoter(params.row);     // ✅ FULL voter object pass
-          setImageModalOpen(true);          // ✅ SAME dialog open
+          if (!hasPhoto) return;        // ❌ image नसेल तर click बंद
+          e.stopPropagation();
+          setSelectedVoter(params.row);
+          setImageModalOpen(true);
         }}
       >
         {voterId}
@@ -135,6 +168,8 @@ const columns = (handleDelete, handleEdit) => [
     );
   },
 },
+
+
  { field: 'name', headerName: 'Name', width: 220 },
   { field: 'srn', headerName: 'Sr No', width: 80 },
    { field: 'boothNumber', headerName: 'Booth', width: 80 },
