@@ -264,3 +264,7 @@
 
 
 
+.twice-voter-row {
+  color: red !important;
+  font-weight: 600;
+}

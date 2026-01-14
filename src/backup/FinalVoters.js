@@ -139,32 +139,82 @@ const columns = (handleDelete, handleEdit) => [
 
 // ======================
 
+// {
+//   field: 'voterId',
+//   headerName: 'Voter ID',
+//   width: 150,
+//   renderCell: (params) => {
+//     const voterId = params.value;
+
+//     return (
+//       <span
+//         style={{
+//           color: '#1976D2',
+//           textDecoration: 'underline',
+//           fontWeight: 600,
+//           cursor: 'pointer',
+//         }}
+//         onClick={(e) => {
+//           e.stopPropagation();              // 🔥 DataGrid row click block
+//           setSelectedVoter(params.row);     // ✅ FULL voter object pass
+//           setImageModalOpen(true);          // ✅ SAME dialog open
+//         }}
+//       >
+//         {voterId}
+//       </span>
+//     );
+//   },
+// },
+
 {
   field: 'voterId',
   headerName: 'Voter ID',
   width: 150,
   renderCell: (params) => {
     const voterId = params.value;
+    const photoUrl = `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`;
 
+    // 🔥 check once
+    checkImageExists(voterId);
+
+    // ❌ photo नाही → plain text
+    if (photoExists[voterId] === false) {
+      return (
+        <span style={{ fontWeight: 500 }}>
+          {voterId}
+        </span>
+      );
+    }
+
+    // ⏳ loading phase
+    if (photoExists[voterId] === undefined) {
+      return (
+        <span style={{ opacity: 0.6 }}>
+          {voterId}
+        </span>
+      );
+    }
+
+    // ✅ photo आहे → hyperlink
     return (
-      <span
+      <a
+        href={photoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
         style={{
           color: '#1976D2',
           textDecoration: 'underline',
           fontWeight: 600,
           cursor: 'pointer',
         }}
-        onClick={(e) => {
-          e.stopPropagation();              // 🔥 DataGrid row click block
-          setSelectedVoter(params.row);     // ✅ FULL voter object pass
-          setImageModalOpen(true);          // ✅ SAME dialog open
-        }}
       >
         {voterId}
-      </span>
+      </a>
     );
   },
 },
+
 
 
   { field: 'name', headerName: 'Name', width: 220 },
@@ -324,6 +374,42 @@ const handleRefresh = () => {
     XLSX.utils.book_append_sheet(wb, ws, 'Voters');
     XLSX.writeFile(wb, 'Voter_Master.xlsx');
   };
+
+
+// const downloadHyperlinVoters = () => {
+//   if (!voters.length) {
+//     toast.warn("No data");
+//     return;
+//   }
+
+//   const ws = XLSX.utils.json_to_sheet(voters);
+
+//   voters.forEach((voter, index) => {
+//     const voterId = voter.voterId;
+//     const rowIndex = index + 2; // header +1
+//     const cellRef = `D${rowIndex}`; 
+//     // ⚠️ D = voterId column (जर बदल असेल तर अक्षर change कर)
+
+//     if (photoExists[voterId]) {
+//       ws[cellRef] = {
+//         t: "s",
+//         v: voterId,
+//         l: {
+//           Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`,
+//           Tooltip: "View Voter Photo",
+//         },
+//       };
+//     }
+//   });
+
+//   const wb = XLSX.utils.book_new();
+//   XLSX.utils.book_append_sheet(wb, ws, "Voters");
+
+//   XLSX.writeFile(wb, "Voter_Master_With_Hyperlink.xlsx");
+// };
+
+
+
 // const downloadAllSlips = () => {
 //     if (!voters.length) {
 //       toast.warn('No data');
@@ -355,6 +441,755 @@ const handleRefresh = () => {
 
 // ====================
 // slot wise
+
+
+
+
+// const downloadHyperlinVoters = () => {
+//   if (!voters.length) {
+//     toast.warn("No data");
+//     return;
+//   }
+
+//   // ✅ ONLY current voters (no pagination logic here)
+//   const exportData = voters.map(v => ({ ...v }));
+
+//   const ws = XLSX.utils.json_to_sheet(exportData);
+
+//   exportData.forEach((voter, index) => {
+//     const voterId = voter.voterId;
+//     const rowIndex = index + 2; // header row +1
+//     const cellRef = `D${rowIndex}`; // voterId column
+
+//     // ✅ hyperlink only if photo exists
+//     if (photoExists[voterId]) {
+//       ws[cellRef] = {
+//         t: "s",
+//         v: voterId,
+//         l: {
+//           Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`,
+//           Tooltip: "View Voter Photo",
+//         },
+//       };
+//     }
+//   });
+
+//   const wb = XLSX.utils.book_new();
+//   XLSX.utils.book_append_sheet(wb, ws, "Voters");
+
+//   XLSX.writeFile(wb, "Voter_Master_With_Hyperlink.xlsx");
+// };
+
+
+// const downloadHyperlinVoters = async () => {
+//   try {
+//     toast.info("Fetching all voters, please wait...");
+
+//     const res = await axios.get(API_URL, {
+//       params: {
+//         export: true,              // 🔥 BACKEND ला सांगतो – pagination OFF
+//         search: appliedSearch || "",
+//       },
+//     });
+
+//     const allVoters = res.data.voters || [];
+
+//     if (!allVoters.length) {
+//       toast.warn("No data");
+//       return;
+//     }
+
+//     toast.success(`Loaded ${allVoters.length} voters`);
+
+//     const ws = XLSX.utils.json_to_sheet(allVoters);
+
+//     allVoters.forEach((voter, index) => {
+//       const voterId = voter.voterId;
+//       const rowIndex = index + 2;
+//       const cellRef = `D${rowIndex}`; // voterId column
+
+//       if (photoExists[voterId]) {
+//         ws[cellRef] = {
+//           t: "s",
+//           v: voterId,
+//           l: {
+//             Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`,
+//             Tooltip: "View Voter Photo",
+//           },
+//         };
+//       }
+//     });
+
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, "Voters");
+
+//     XLSX.writeFile(wb, "Voter_Master_With_Hyperlink.xlsx");
+
+//   } catch (err) {
+//     console.error(err);
+//     toast.error("Failed to download Excel");
+//   }
+// };
+
+// const downloadHyperlinVoters = () => {
+//   if (!voters.length) {
+//     toast.warn("No data");
+//     return;
+//   }
+
+//   // ✅ only photo exists voters
+//   const votersWithPhoto = voters.filter(
+//     v => photoExists[v.voterId] === true
+//   );
+
+//   if (!votersWithPhoto.length) {
+//     toast.warn("No voters with photo found");
+//     return;
+//   }
+
+//   // 🔹 Excel data
+//   const ws = XLSX.utils.json_to_sheet(votersWithPhoto);
+
+//   // 🔹 Hyperlink only for photo voters
+//   votersWithPhoto.forEach((voter, index) => {
+//     const voterId = voter.voterId;
+//     const rowIndex = index + 2; // header + 1
+//     const cellRef = `D${rowIndex}`; // voterId column
+
+//     ws[cellRef] = {
+//       t: "s",
+//       v: voterId,
+//       l: {
+//         Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`,
+//         Tooltip: "View Voter Photo",
+//       },
+//     };
+//   });
+
+//   // =============================
+//   // 🔥 TOTAL COUNT AT BOTTOM
+//   // =============================
+//   const totalRowIndex = votersWithPhoto.length + 3;
+
+//   ws[`C${totalRowIndex}`] = {
+//     t: "s",
+//     v: "TOTAL VOTERS WITH PHOTO",
+//   };
+
+//   ws[`D${totalRowIndex}`] = {
+//     t: "n",
+//     v: votersWithPhoto.length,
+//   };
+
+//   // optional bold look (Excel will respect)
+//   ws[`C${totalRowIndex}`].s = { font: { bold: true } };
+//   ws[`D${totalRowIndex}`].s = { font: { bold: true } };
+
+//   const wb = XLSX.utils.book_new();
+//   XLSX.utils.book_append_sheet(wb, ws, "Voters_With_Photo");
+
+//   XLSX.writeFile(wb, "Voter_With_Photo_Hyperlink.xlsx");
+
+//   toast.success(`Downloaded ${votersWithPhoto.length} voters with photo`);
+// };
+
+// const downloadHyperlinVoters = async () => {
+//   try {
+//     toast.info("Fetching full voter data...");
+
+//     const res = await axios.get(API_URL, {
+//       params: {
+//         export: true,              // 🔥 pagination OFF
+//         search: appliedSearch || ""
+//       }
+//     });
+
+//     const allVoters = res.data.voters || [];
+
+//     if (!allVoters.length) {
+//       toast.warn("No data found");
+//       return;
+//     }
+
+//     // ✅ only voters with photo
+//     const votersWithPhoto = allVoters.filter(
+//       v => photoExists[v.voterId] === true
+//     );
+
+//     if (!votersWithPhoto.length) {
+//       toast.warn("No voters with photo found");
+//       return;
+//     }
+
+//     const ws = XLSX.utils.json_to_sheet(votersWithPhoto);
+
+//     votersWithPhoto.forEach((voter, index) => {
+//       const rowIndex = index + 2;
+//       const cellRef = `D${rowIndex}`;
+
+//       ws[cellRef] = {
+//         t: "s",
+//         v: voter.voterId,
+//         l: {
+//           Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voter.voterId}.webp`,
+//           Tooltip: "View Voter Photo",
+//         },
+//       };
+//     });
+
+//     // 🔽 TOTAL COUNT AT BOTTOM
+//     const totalRow = votersWithPhoto.length + 3;
+//     ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS WITH PHOTO" };
+//     ws[`D${totalRow}`] = { t: "n", v: votersWithPhoto.length };
+
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, "Voters_With_Photo");
+
+//     XLSX.writeFile(wb, "Voter_With_Photo_Hyperlink.xlsx");
+
+//     toast.success(`Downloaded ${votersWithPhoto.length} voters`);
+
+//   } catch (err) {
+//     console.error(err);
+//     toast.error("Excel download failed");
+//   }
+// };
+
+// const downloadHyperlinVoters = async () => {
+//   try {
+//     toast.info("Fetching full voter data...");
+
+//     // 🔥 pagination OFF – FULL collection data
+//     const res = await axios.get(API_URL, {
+//       params: {
+//         export: true,
+//         search: appliedSearch || "",
+//       },
+//     });
+
+//     const allVoters = res.data.voters || [];
+
+//     if (!allVoters.length) {
+//       toast.warn("No data found");
+//       return;
+//     }
+
+//     // =====================================
+//     // ✅ PHOTO EXISTS CHECK (RUNTIME)
+//     // =====================================
+//     const votersWithPhoto = [];
+
+//     for (const voter of allVoters) {
+//       const voterId = voter.voterId;
+//       if (!voterId) continue;
+
+//       const imgUrl = `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`;
+
+//       // 🔥 async image check
+//       const exists = await new Promise((resolve) => {
+//         const img = new Image();
+//         img.src = imgUrl;
+//         img.onload = () => resolve(true);
+//         img.onerror = () => resolve(false);
+//       });
+
+//       if (exists) {
+//         votersWithPhoto.push({ ...voter, __photoUrl: imgUrl });
+//       }
+//     }
+
+//     if (!votersWithPhoto.length) {
+//       toast.warn("No voters with photo found");
+//       return;
+//     }
+
+//     // =====================================
+//     // ✅ CREATE EXCEL
+//     // =====================================
+//     const ws = XLSX.utils.json_to_sheet(votersWithPhoto);
+
+//     votersWithPhoto.forEach((voter, index) => {
+//       const rowIndex = index + 2; // header +1
+//       const cellRef = `D${rowIndex}`; // ⚠️ voterId column
+
+//       ws[cellRef] = {
+//         t: "s",
+//         v: voter.voterId,
+//         l: {
+//           Target: voter.__photoUrl,
+//           Tooltip: "View Voter Photo",
+//         },
+//       };
+//     });
+
+//     // =====================================
+//     // 🔽 TOTAL COUNT (BOTTOM)
+//     // =====================================
+//     const totalRow = votersWithPhoto.length + 3;
+
+//     ws[`C${totalRow}`] = {
+//       t: "s",
+//       v: "TOTAL VOTERS WITH PHOTO",
+//     };
+
+//     ws[`D${totalRow}`] = {
+//       t: "n",
+//       v: votersWithPhoto.length,
+//     };
+
+//     // =====================================
+//     // ✅ FINAL EXPORT
+//     // =====================================
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, "Voters_With_Photo");
+
+//     XLSX.writeFile(wb, "Voter_With_Photo_Hyperlink.xlsx");
+
+//     toast.success(`Downloaded ${votersWithPhoto.length} voters with photo`);
+
+//   } catch (error) {
+//     console.error(error);
+//     toast.error("Excel download failed");
+//   }
+// };
+
+
+// const downloadHyperlinVoters = async () => {
+//   try {
+//     toast.info("Fetching full voter data...");
+
+//     const res = await axios.get(API_URL, {
+//       params: {
+//         export: true,          // 🔥 backend ला signal
+//         search: appliedSearch || "",
+//       },
+//     });
+
+//     const allVoters = res.data.voters || [];
+
+//     if (!allVoters.length) {
+//       toast.warn("No data found");
+//       return;
+//     }
+
+//     const ws = XLSX.utils.json_to_sheet(allVoters);
+
+//     allVoters.forEach((voter, index) => {
+//       const rowIndex = index + 2;
+//       const cellRef = `D${rowIndex}`;
+
+//       ws[cellRef] = {
+//         t: "s",
+//         v: voter.voterId,
+//         l: {
+//           Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voter.voterId}.webp`,
+//           Tooltip: "View Voter Photo",
+//         },
+//       };
+//     });
+
+//     // 🔽 TOTAL COUNT
+//     const totalRow = allVoters.length + 3;
+//     ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS" };
+//     ws[`D${totalRow}`] = { t: "n", v: allVoters.length };
+
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, "Voters");
+
+//     XLSX.writeFile(wb, "Voter_Master_With_Hyperlink.xlsx");
+
+//     toast.success(`Downloaded ${allVoters.length} voters`);
+//   } catch (err) {
+//     console.error(err);
+//     toast.error("Download failed");
+//   }
+// };
+
+
+// const downloadHyperlinVoters = async () => {
+//   try {
+//     toast.info("Checking voter photos, please wait...");
+
+//     // 1️⃣ Fetch ALL voters (pagination OFF)
+//     const res = await axios.get(API_URL, {
+//       params: {
+//         export: true,
+//         search: appliedSearch || "",
+//       },
+//     });
+
+//     const allVoters = res.data.voters || [];
+
+//     if (!allVoters.length) {
+//       toast.warn("No data found");
+//       return;
+//     }
+
+//     // 2️⃣ Image existence check (REAL source of truth)
+//     const votersWithPhoto = [];
+
+//     for (const voter of allVoters) {
+//       const voterId = voter.voterId;
+//       if (!voterId) continue;
+
+//       const imgUrl = `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`;
+
+//       const exists = await new Promise((resolve) => {
+//         const img = new Image();
+//         img.src = imgUrl;
+//         img.onload = () => resolve(true);
+//         img.onerror = () => resolve(false);
+//       });
+
+//       if (exists) {
+//         votersWithPhoto.push(voter);
+//       }
+//     }
+
+//     if (!votersWithPhoto.length) {
+//       toast.warn("No voters with photo found");
+//       return;
+//     }
+
+//     // 3️⃣ Excel sheet
+//     const ws = XLSX.utils.json_to_sheet(votersWithPhoto);
+
+//     votersWithPhoto.forEach((voter, index) => {
+//       const rowIndex = index + 2; // header +1
+//       const cellRef = `D${rowIndex}`; // ⚠️ voterId column
+
+//       ws[cellRef] = {
+//         t: "s",
+//         v: voter.voterId,
+//         l: {
+//           Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voter.voterId}.webp`,
+//           Tooltip: "View Voter Photo",
+//         },
+//       };
+//     });
+
+//     // 4️⃣ TOTAL COUNT at bottom
+//     const totalRow = votersWithPhoto.length + 3;
+
+//     ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS WITH PHOTO" };
+//     ws[`D${totalRow}`] = { t: "n", v: votersWithPhoto.length };
+
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, "Voters_With_Photo");
+
+//     XLSX.writeFile(wb, "Voter_With_Photo_Hyperlink.xlsx");
+
+//     toast.success(`Downloaded ${votersWithPhoto.length} voters with photo ✅`);
+
+//   } catch (err) {
+//     console.error(err);
+//     toast.error("Excel download failed");
+//   }
+// };
+
+
+// const downloadHyperlinVoters = () => {
+//   if (!voters.length) {
+//     toast.warn("No data");
+//     return;
+//   }
+
+//   // ✅ ONLY photo exists
+//   const votersWithPhoto = voters.filter(
+//     v => photoExists[v.voterId] === true
+//   );
+
+//   if (!votersWithPhoto.length) {
+//     toast.warn("No voters with photo");
+//     return;
+//   }
+
+//   const ws = XLSX.utils.json_to_sheet(votersWithPhoto);
+
+//   votersWithPhoto.forEach((voter, index) => {
+//     const rowIndex = index + 2;        // header +1
+//     const cellRef = `D${rowIndex}`;    // ⚠️ voterId column
+
+//     ws[cellRef] = {
+//       t: "s",
+//       v: voter.voterId,
+//       l: {
+//         Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voter.voterId}.webp`,
+//         Tooltip: "View Voter Photo",
+//       },
+//     };
+//   });
+
+//   // 🔽 TOTAL COUNT
+//   const totalRow = votersWithPhoto.length + 3;
+//   ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS WITH PHOTO" };
+//   ws[`D${totalRow}`] = { t: "n", v: votersWithPhoto.length };
+
+//   const wb = XLSX.utils.book_new();
+//   XLSX.utils.book_append_sheet(wb, ws, "With_Photo");
+
+//   XLSX.writeFile(wb, "Voters_With_Photo_Hyperlink.xlsx");
+
+//   toast.success(`Downloaded ${votersWithPhoto.length} voters (with photo)`);
+// };
+
+
+
+const downloadHyperlinVoters = async () => {
+  try {
+    toast.info("Checking voter photos, please wait...");
+
+    // 🔥 सर्व voters fetch करा
+    const res = await axios.get(API_URL, {
+      params: {
+        export: true,
+        search: appliedSearch || "",
+      },
+    });
+
+    const allVoters = res.data.voters || [];
+
+    if (!allVoters.length) {
+      toast.warn("No data found");
+      return;
+    }
+
+    toast.info(`Checking photos for ${allVoters.length} voters...`);
+
+    // 🔥 प्रत्येक voter साठी photo check करा
+    const votersWithPhoto = [];
+
+    for (const voter of allVoters) {
+      const voterId = voter.voterId;
+      if (!voterId) continue;
+
+      const imgUrl = `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`;
+
+      // ✅ Real-time image check
+      const exists = await new Promise((resolve) => {
+        const img = new Image();
+        img.src = imgUrl;
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+      });
+
+      if (exists) {
+        votersWithPhoto.push(voter);
+      }
+    }
+
+    if (!votersWithPhoto.length) {
+      toast.warn("No voters with photo found");
+      return;
+    }
+
+    // 📊 Excel sheet तयार करा
+    const ws = XLSX.utils.json_to_sheet(votersWithPhoto);
+
+    // 🔗 Hyperlinks add करा
+    votersWithPhoto.forEach((voter, index) => {
+      const rowIndex = index + 2; // header +1
+      const cellRef = `D${rowIndex}`; // voterId column (D = 4th column)
+
+      ws[cellRef] = {
+        t: "s",
+        v: voter.voterId,
+        l: {
+          Target: `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voter.voterId}.webp`,
+          Tooltip: "View Voter Photo",
+        },
+      };
+    });
+
+    // 📌 Total count add करा
+    const totalRow = votersWithPhoto.length + 3;
+    ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS WITH PHOTO" };
+    ws[`D${totalRow}`] = { t: "n", v: votersWithPhoto.length };
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "With_Photo");
+
+    XLSX.writeFile(wb, "Voters_With_Photo_Hyperlink.xlsx");
+
+    toast.success(`Downloaded ${votersWithPhoto.length} voters with photo ✅`);
+
+  } catch (err) {
+    console.error(err);
+    toast.error("Excel download failed");
+  }
+};
+
+
+// const downloadWithoutHyperlinVoters = async () => {
+//   try {
+//     toast.info("Checking voter photos (without photo list)...");
+
+//     // 1️⃣ Fetch ALL voters (pagination OFF)
+//     const res = await axios.get(API_URL, {
+//       params: {
+//         export: true,
+//         search: appliedSearch || "",
+//       },
+//     });
+
+//     const allVoters = res.data.voters || [];
+
+//     if (!allVoters.length) {
+//       toast.warn("No data found");
+//       return;
+//     }
+
+//     // 2️⃣ Image existence check
+//     const votersWithoutPhoto = [];
+
+//     for (const voter of allVoters) {
+//       const voterId = voter.voterId;
+//       if (!voterId) continue;
+
+//       const imgUrl = `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`;
+
+//       const exists = await new Promise((resolve) => {
+//         const img = new Image();
+//         img.src = imgUrl;
+//         img.onload = () => resolve(true);
+//         img.onerror = () => resolve(false);
+//       });
+
+//       // ❌ PHOTO नाही → घे
+//       if (!exists) {
+//         votersWithoutPhoto.push(voter);
+//       }
+//     }
+
+//     if (!votersWithoutPhoto.length) {
+//       toast.warn("All voters have photo 👍");
+//       return;
+//     }
+
+//     // 3️⃣ Excel WITHOUT hyperlink
+//     const ws = XLSX.utils.json_to_sheet(votersWithoutPhoto);
+
+//     // 4️⃣ TOTAL COUNT at bottom
+//     const totalRow = votersWithoutPhoto.length + 3;
+
+//     ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS WITHOUT PHOTO" };
+//     ws[`D${totalRow}`] = { t: "n", v: votersWithoutPhoto.length };
+
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, "Voters_Without_Photo");
+
+//     XLSX.writeFile(wb, "Voter_Without_Photo.xlsx");
+
+//     toast.success(`Downloaded ${votersWithoutPhoto.length} voters without photo ❌📷`);
+
+//   } catch (err) {
+//     console.error(err);
+//     toast.error("Excel download failed");
+//   }
+// };
+
+// const downloadWithoutHyperlinVoters = () => {
+//   if (!voters.length) {
+//     toast.warn("No data");
+//     return;
+//   }
+
+//   // ❌ ONLY photo NOT exists
+//   const votersWithoutPhoto = voters.filter(
+//     v => photoExists[v.voterId] === false
+//   );
+
+//   if (!votersWithoutPhoto.length) {
+//     toast.warn("All voters have photo");
+//     return;
+//   }
+
+//   const ws = XLSX.utils.json_to_sheet(votersWithoutPhoto);
+
+//   // 🔽 TOTAL COUNT
+//   const totalRow = votersWithoutPhoto.length + 3;
+//   ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS WITHOUT PHOTO" };
+//   ws[`D${totalRow}`] = { t: "n", v: votersWithoutPhoto.length };
+
+//   const wb = XLSX.utils.book_new();
+//   XLSX.utils.book_append_sheet(wb, ws, "Without_Photo");
+
+//   XLSX.writeFile(wb, "Voters_Without_Photo.xlsx");
+
+//   toast.success(`Downloaded ${votersWithoutPhoto.length} voters (no photo)`);
+// };
+
+
+const downloadWithoutHyperlinVoters = async () => {
+  try {
+    toast.info("Checking voter photos (without photo list)...");
+
+    // 🔥 सर्व voters fetch करा
+    const res = await axios.get(API_URL, {
+      params: {
+        export: true,
+        search: appliedSearch || "",
+      },
+    });
+
+    const allVoters = res.data.voters || [];
+
+    if (!allVoters.length) {
+      toast.warn("No data found");
+      return;
+    }
+
+    toast.info(`Checking photos for ${allVoters.length} voters...`);
+
+    // 🔥 प्रत्येक voter साठी photo check करा
+    const votersWithoutPhoto = [];
+
+    for (const voter of allVoters) {
+      const voterId = voter.voterId;
+      if (!voterId) continue;
+
+      const imgUrl = `https://pub-a4cb67c45dc144a680b4ffe52e34ef06.r2.dev/voters/${voterId}.webp`;
+
+      // ✅ Real-time image check
+      const exists = await new Promise((resolve) => {
+        const img = new Image();
+        img.src = imgUrl;
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+      });
+
+      // ❌ Photo नाही → add करा
+      if (!exists) {
+        votersWithoutPhoto.push(voter);
+      }
+    }
+
+    if (!votersWithoutPhoto.length) {
+      toast.warn("All voters have photo 👍");
+      return;
+    }
+
+    // 📊 Excel sheet तयार करा (WITHOUT hyperlinks)
+    const ws = XLSX.utils.json_to_sheet(votersWithoutPhoto);
+
+    // 📌 Total count add करा
+    const totalRow = votersWithoutPhoto.length + 3;
+    ws[`C${totalRow}`] = { t: "s", v: "TOTAL VOTERS WITHOUT PHOTO" };
+    ws[`D${totalRow}`] = { t: "n", v: votersWithoutPhoto.length };
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Without_Photo");
+
+    XLSX.writeFile(wb, "Voters_Without_Photo.xlsx");
+
+    toast.success(`Downloaded ${votersWithoutPhoto.length} voters without photo ❌`);
+
+  } catch (err) {
+    console.error(err);
+    toast.error("Excel download failed");
+  }
+};
+
 
 const downloadAllSlips = () => {
   if (!voters.length) {
@@ -961,7 +1796,30 @@ width: {
             Download
           </Button>
 
-         
+          <Button
+            startIcon={<DownloadIcon />}
+            onClick={downloadHyperlinVoters}
+              size='lg'
+            sx={{
+              backgroundColor: '#1976D2',
+              color: '#fff',
+              '&:hover': { backgroundColor: '#179e96' },
+            }}
+          >
+          With Hyperlink
+          </Button>
+          <Button
+            startIcon={<DownloadIcon />}
+            onClick={downloadWithoutHyperlinVoters}
+              size='lg'
+            sx={{
+              backgroundColor: '#1976D2',
+              color: '#fff',
+              '&:hover': { backgroundColor: '#179e96' },
+            }}
+          >
+          Without Hyperlink
+          </Button>
         </Box>
       </Box>
 
