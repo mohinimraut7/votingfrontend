@@ -69,7 +69,12 @@ const FinalVoters = () => {
 
   // ✅ Single search
   const [searchText, setSearchText] = useState('');
+    const [searchHouse, setSearchHouse] = useState('');
+
+  
   const [appliedSearch, setAppliedSearch] = useState('');
+    const [appliedSearchHouse, setAppliedSearchHouse] = useState('');
+
 
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
@@ -245,6 +250,7 @@ const columns = (handleDelete, handleEdit) => [
           page: paginationModel.page + 1,
           limit: paginationModel.pageSize,
           search: appliedSearch,
+          houseNo: appliedSearchHouse,
         },
       });
 
@@ -264,7 +270,7 @@ const columns = (handleDelete, handleEdit) => [
  
   useEffect(() => {
     fetchVoters();
-  }, [paginationModel, appliedSearch]);
+  }, [paginationModel, appliedSearch,appliedSearchHouse]);
 
 
 
@@ -292,7 +298,9 @@ const columns = (handleDelete, handleEdit) => [
 const handleRefresh = () => {
   // 🔹 search clear
   setSearchText('');
+  setSearchHouse('');
   setAppliedSearch('');
+  setAppliedSearchHouse('');
 
   // 🔹 pagination reset (first page)
   setPaginationModel(prev => ({
@@ -862,16 +870,25 @@ const handlePrintSlip = () => {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           /> */}
+
 <TextField
   size="large"
   label="Search By Name / Mobile / Voter ID"
   value={searchText}
   onChange={(e) => setSearchText(e.target.value)}
   sx={{
-    width: { xs: '100%', md: '55%' },
+    width: { xs: '100%', md: '35%' },
   }}
 />
-
+<TextField
+  size="large"
+  label="Search By House No. / Village"
+  value={searchHouse}
+  onChange={(e) => setSearchHouse(e.target.value)}
+  sx={{
+    width: { xs: '100%', md: '35%' },
+  }}
+/>
 
 
         <Box sx={{ flexWrap: 'wrap',
@@ -932,7 +949,7 @@ width: {
 
       
 
- <Button
+ {/* <Button
             variant="contained"
             size='lg'
             onClick={() => {
@@ -946,7 +963,31 @@ width: {
             }}
           >
             Search
-          </Button>
+          </Button> */}
+
+
+<Button
+  variant="contained"
+  size="lg"
+  onClick={() => {
+    // 🔁 pagination reset
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+
+    // 🔍 apply both searches
+    setAppliedSearch(searchText.trim());
+    setAppliedSearchHouse(searchHouse.trim());
+  }}
+  sx={{
+    backgroundColor: '#1976D2',
+    color: '#fff',
+    '&:hover': { backgroundColor: '#179e96' },
+  }}
+>
+  Search
+</Button>
+
+
+
 
           <Button
             startIcon={<DownloadIcon />}
@@ -1584,7 +1625,7 @@ width: {
           </Grid>
 
         
-          <Grid item xs={12} md={8} sx={{ p: 4 }}>
+          {/* <Grid item xs={12} md={8} sx={{ p: 4 }}>
             <Grid container spacing={2}>
               {(() => {
                 const hiddenFields = [
@@ -1606,11 +1647,37 @@ width: {
                   ['village', null],
                 ];
 
-                return orderedPairs.map((pair, rowIndex) =>
-                  pair.map((key) => {
-                    if (!key) return null;
-                    if (hiddenFields.includes(key)) return null;
-                    if (!(key in selectedVoter)) return null;
+                  // return orderedPairs.map((pair, rowIndex) =>
+                  //   pair.map((key) => {
+                  //     if (!key) return null;
+                  //     if (hiddenFields.includes(key)) return null;
+                  //     if (!(key in selectedVoter)) return null;
+
+
+
+
+
+
+
+
+  return orderedPairs.map((pair, rowIndex) =>
+        pair.map((key) => {
+          // 🔥 HANDLE null + flag logic
+          const displayKey =
+            key === null && selectedVoter.flag === "twice"
+              ? "flag"
+              : key;
+
+          if (!displayKey) return null;
+          if (hiddenFields.includes(displayKey)) return null;
+
+
+
+
+
+
+
+
 
                     return (
                       <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
@@ -1654,7 +1721,122 @@ width: {
                 This is an official voter information record.
               </Typography>
             </Box>
-          </Grid>
+          </Grid> */}
+
+          <Grid item xs={12} md={8} sx={{ p: 4 }}>
+  <Grid container spacing={2}>
+    {(() => {
+      const hiddenFields = [
+        '_id',
+        '__v',
+        'firstName',
+        'middleName',
+        'lastName',
+        'colorCode',
+      ];
+
+      const orderedPairs = [
+        ['corporation', 'wardNumber'],
+        ['voterId', 'name'],
+        ['boothNumber', 'boothName'],
+        ['srnNo', 'assemblyNo'],
+        ['houseNo', 'PartNo'],
+        ['mobileOne', 'mobileTwo'],
+        ['village', null], // 👈 village row
+      ];
+
+      return orderedPairs.map((pair, rowIndex) =>
+        pair.map((key) => {
+          if (!key) return null;
+          if (hiddenFields.includes(key)) return null;
+          if (!(key in selectedVoter)) return null;
+
+          return (
+            // <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
+            //   <Box sx={{ py: 0.5 }}>
+            //     <Typography
+            //       variant="caption"
+            //       sx={{
+            //         color: '#6b7280',
+            //         letterSpacing: '0.05em',
+            //         fontSize: '11px',
+            //       }}
+            //     >
+            //       {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+            //     </Typography>
+
+            //     <Typography
+            //       variant="body2"
+            //       sx={{
+            //         fontWeight: 600,
+            //         color: '#111827',
+            //         display: 'flex',
+            //         alignItems: 'center',
+            //         gap: 1,
+            //       }}
+            //     >
+            //       {selectedVoter[key] || '-'}
+
+            //       {/* 🔥 DUBAR FLAG */}
+            //       {key === 'village' && selectedVoter.flag === 'twice' && (
+            //         <span
+            //           style={{
+            //             color: 'red',
+            //             fontWeight: 700,
+            //             fontSize: '13px',
+            //           }}
+            //         >
+            //           DUBAR
+            //         </span>
+            //       )}
+            //     </Typography>
+            //   </Box>
+            // </Grid>
+
+
+            <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
+  <Box sx={{ py: 0.5 }}>
+    <Typography
+      variant="caption"
+      sx={{
+        color: '#6b7280',
+        letterSpacing: '0.05em',
+        fontSize: '11px',
+      }}
+    >
+      {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+    </Typography>
+
+    <Typography
+      variant="body2"
+      sx={{
+        fontWeight: 600,
+        color: key === 'flag' ? 'red' : '#111827',
+      }}
+    >
+      {/* 🔥 FLAG LOGIC */}
+      {key === 'flag'
+        ? selectedVoter.flag === 'twice'
+          ? 'DUBAR'
+          : null
+        : selectedVoter[key] || '-'}
+    </Typography>
+  </Box>
+</Grid>
+
+          );
+        })
+      );
+    })()}
+  </Grid>
+
+  <Box sx={{ mt: 3 }}>
+    <Typography variant="caption" sx={{ color: '#6b7280' }}>
+      This is an official voter information record.
+    </Typography>
+  </Box>
+</Grid>
+
         </Grid>
       </Box>
     )}
@@ -1878,7 +2060,7 @@ width: {
                   ['srnNo', 'assemblyNo'],
                   ['houseNo', 'PartNo'],
                   ['mobileOne', 'mobileTwo'],
-                  ['village', null],
+                  ['village', "flag"],
                 ];
 
                 return orderedPairs.map((pair, rowIndex) =>
@@ -1887,33 +2069,133 @@ width: {
                     if (hiddenFields.includes(key)) return null;
                     if (!(key in selectedVoter)) return null;
 
-                    return (
-                      <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-                        <Box sx={{ py: 0.5 }}>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: '#6b7280',
-                              letterSpacing: '0.05em',
-                              fontSize: '11px',
-                            }}
-                          >
-                            {key
-                              .replace(/([A-Z])/g, ' $1')
-                              .toUpperCase()}
-                          </Typography>
 
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontWeight: 600,
-                              color: '#111827',
-                            }}
-                          >
-                            {selectedVoter[key] || '-'}
-                          </Typography>
-                        </Box>
-                      </Grid>
+
+
+                    
+
+                    return (
+                      // <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
+                      //   <Box sx={{ py: 0.5 }}>
+                      //     <Typography
+                      //       variant="caption"
+                      //       sx={{
+                      //         color: '#6b7280',
+                      //         letterSpacing: '0.05em',
+                      //         fontSize: '11px',
+                      //       }}
+                      //     >
+                      //       {key
+                      //         .replace(/([A-Z])/g, ' $1')
+                      //         .toUpperCase()}
+                      //     </Typography>
+
+                      //     <Typography
+                      //       variant="body2"
+                      //       sx={{
+                      //         fontWeight: 600,
+                      //         color: '#111827',
+                      //       }}
+                      //     >
+                      //       {selectedVoter[key] || '-'}
+                      //     </Typography>
+                      //   </Box>
+                      // </Grid>
+// ==========================================
+
+//                       <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
+//   <Box sx={{ py: 0.5 }}>
+//     <Typography
+//       variant="caption"
+//       sx={{
+//         color: '#6b7280',
+//         letterSpacing: '0.05em',
+//         fontSize: '11px',
+//       }}
+//     >
+//       {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+//     </Typography>
+
+//     <Typography
+//       variant="body2"
+//       sx={{
+//         fontWeight: 600,
+//         color: '#111827',
+//         display: 'flex',
+//         alignItems: 'center',
+//         gap: 1,
+//       }}
+//     >
+//       {selectedVoter[key] || '-'}
+
+//       <Typography
+//   variant="body2"
+//   sx={{
+//     fontWeight: 600,
+//     color: '#111827',
+//   }}
+// >
+//   {key === 'flag'
+//     ? selectedVoter.flag === 'twice'
+//       ? 'DUBAR'
+//       : selectedVoter.flag
+//     : selectedVoter[key] || '-'}
+// </Typography>
+
+
+//       {/* 🔥 DUBAR FLAG ONLY FOR VILLAGE */}
+//       {/* {key === 'village' && selectedVoter.flag === 'twice' && (
+//         <span
+//           style={{
+//             color: 'red',
+//             fontWeight: 700,
+//             fontSize: '13px',
+//           }}
+//         >
+//           DUBAR
+//         </span>
+//       )} */}
+//     </Typography>
+//   </Box>
+// </Grid>
+
+
+
+
+
+<Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
+  <Box sx={{ py: 0.5 }}>
+    <Typography
+      variant="caption"
+      sx={{
+        color: '#6b7280',
+        letterSpacing: '0.05em',
+        fontSize: '11px',
+      }}
+    >
+      {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+    </Typography>
+
+    <Typography
+      variant="body2"
+      sx={{
+        fontWeight: 600,
+        color: key === 'flag' ? 'red' : '#111827',
+      }}
+    >
+      {/* 🔥 FLAG LOGIC */}
+      {key === 'flag'
+        ? selectedVoter.flag === 'twice'
+          ? 'DUBAR'
+          : null
+        : selectedVoter[key] || '-'}
+    </Typography>
+  </Box>
+</Grid>
+
+
+
+
                     );
                   })
                 );
@@ -1930,6 +2212,9 @@ width: {
               </Typography>
             </Box>
           </Grid>
+
+
+
         </Grid>
       </Box>
     )}
