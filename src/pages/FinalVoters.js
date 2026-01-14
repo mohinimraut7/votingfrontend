@@ -810,10 +810,21 @@ const generateSinglePDF = async (voters, index) => {
 const handlePrintSlip = () => {
   setPrintMode("SLIP");
 
-  setTimeout(() => {
-    window.print();
+  const printData = {
+    slipType: "SLIP",
+    voterId: selectedVoter.voterId,
+    name: selectedVoter.name,
+    ward: selectedVoter.wardNumber,
+    booth: selectedVoter.boothNumber,
+    village: selectedVoter.village,
+    flag: selectedVoter.flag,
+    date: new Date().toLocaleString(),
+  };
 
-    // ✅ print झाल्यावर UI मधून slip हटेल
+  setTimeout(() => {
+    window.print(printData);
+
+    // UI reset after print
     setTimeout(() => setPrintMode(null), 500);
   }, 200);
 };
@@ -845,38 +856,7 @@ const handlePrintSlip = () => {
       
 
          
-          {/* <Typography
-            fontWeight={600}
-           sx={{
-    fontSize: {
-      xs: '14px',
-      sm: '16px',
-      md: '20px',
-      lg: '24px',
-    },
-    textAlign: { xs: 'center', md: 'left' },
-    width: { xs: '100%', md: 'auto' },
-  }}
-          >
-            VOTER MASTER
-          </Typography> */}
-       
-      {/* <TextField
-        sx={{
-          
-         width: {
-      xs: '99%',
-      sm: '99%',
-      md: '60%',
-    },
-        
-        }}
-            size="large"
-        
-            label="Search By Name / Mobile / Voter ID"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          /> */}
+         
 
 <TextField
   size="large"
@@ -921,24 +901,6 @@ width: {
   
 
         }}>
-               {/* 🔍 SINGLE SEARCH */}
-         
-           {/* <Button
-            startIcon={<DownloadIcon />}
-            onClick={downloadAllSlips}
-            sx={{
-              backgroundColor: '#1976D2',
-              color: '#fff',
-              '&:hover': { backgroundColor: '#179e96' },
-            }}
-          >
-            Download All Slips
-          </Button> */}
-
-{/* 
-            <Button variant="contained" size="sm" startIcon={<ReplayIcon />} >
-    
-  </Button> */}
 
 
   <Button
@@ -956,21 +918,7 @@ width: {
 
       
 
- {/* <Button
-            variant="contained"
-            size='lg'
-            onClick={() => {
-              setPaginationModel({ ...paginationModel, page: 0 });
-              setAppliedSearch(searchText);
-            }}
-            sx={{
-              backgroundColor: '#1976D2',
-              color: '#fff',
-              '&:hover': { backgroundColor: '#179e96' },
-            }}
-          >
-            Search
-          </Button> */}
+ 
 
 
 <Button
@@ -1046,462 +994,7 @@ width: {
           />
         </Paper>
       </Container>
-{/* 
-      <Dialog
-  open={openModal}
-  onClose={() => setOpenModal(false)}
-  maxWidth="md"
-  fullWidth
->
-  <DialogContent>
-    {selectedVoter && (
-      <Grid container spacing={3}>
-      
-        <Grid
-          item
-          xs={12}
-          md={4}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#f5f7fa',
-            borderRadius: 2,
-          }}
-        >
-          <Avatar
-            src="/voter-placeholder.png" 
-            sx={{ width: 180, height: 180 }}
-          />
-        </Grid>
 
-        <Grid item xs={12} md={8}>
-          <Typography variant="h6" gutterBottom>
-            Voter Details
-          </Typography>
-
-          <Divider sx={{ mb: 2 }} />
-
-          {Object.entries(selectedVoter).map(([key, value]) => {
-            if (key === '_id' || key === '__v') return null;
-
-            return (
-              <Box
-                key={key}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  mb: 1,
-                  p: 1,
-                  borderBottom: '1px solid #eee',
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{ fontWeight: 600, textTransform: 'capitalize' }}
-                >
-                  {key.replace(/([A-Z])/g, ' $1')}
-                </Typography>
-
-                <Typography variant="body2">
-                  {String(value || '-')}
-                </Typography>
-              </Box>
-            );
-          })}
-        </Grid>
-      </Grid>
-    )}
-  </DialogContent>
-</Dialog> */}
-
-{/* <Dialog
-  open={openModal}
-  onClose={() => setOpenModal(false)}
-  maxWidth="md"
-  fullWidth
->
-  <DialogContent>
-    {selectedVoter && (
-      
-<Grid container spacing={2}>
-  {(() => {
-    if (!selectedVoter) return null;
-
-    const hiddenFields = [
-      '_id',
-      '__v',
-      'firstName',
-      'middleName',
-      'lastName',
-      'colorCode',
-      'BoothEnglish',
-      'Booth_English',
-      'Booth ( English )',
-    ];
-
-    // 👇 CUSTOM ORDER
-    const orderedKeys = [
-      'corporation',
-      'wardNumber',
-
-       'voterId',     // ✅ voterId just below srn
-         'name',
-      'boothNumber',
-    'boothName',
-
-    
-
-      'srn',
-      'assemblyNo',
- 'houseNo',
-     
-      'partNo',
- 'village',
-     
-     
-
-      'gender',      // ✅ age & gender at bottom
-      'age',
-    ];
-
-    return orderedKeys.map((key) => {
-      if (hiddenFields.includes(key)) return null;
-      if (!(key in selectedVoter)) return null;
-
-      const value = selectedVoter[key];
-
-      return (
-        <Grid item xs={12} md={6} key={key}>
-          <Box
-            sx={{
-              p: 1.5,
-              border: '1px solid #eee',
-              borderRadius: 1,
-              height: '100%',
-            }}
-          >
-            <Typography
-              variant="caption"
-              sx={{
-                color: 'text.secondary',
-                textTransform: 'capitalize',
-              }}
-            >
-              {key.replace(/([A-Z])/g, ' $1')}
-            </Typography>
-
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: 600 }}
-            >
-              {String(value || '-')}
-            </Typography>
-          </Box>
-        </Grid>
-      );
-    });
-  })()}
-</Grid>
-
-
-    )}
-  </DialogContent>
-</Dialog> */}
-
-{/* ------------------------- */}
-
-
-{/* <Dialog
-  open={openModal}
-  onClose={() => setOpenModal(false)}
-  maxWidth={false}
-  fullWidth
-  PaperProps={{
-    sx: {
-      width: '90%',          
-      maxWidth: '1400px',
-      borderRadius: 2,
-    },
-  }}
->
-  <DialogContent sx={{ p: 0 }}>
-    {selectedVoter && (
-      <Grid container minHeight="70vh">
-
-        <Grid
-          item
-          xs={12}
-          md={4} // ~30%
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#f5f7fa',
-          }}
-        >
-          <Avatar
-            src="/voter-placeholder.png" // dummy image (public folder)
-            alt="Voter"
-            sx={{
-              width: 220,
-              height: 220,
-              bgcolor: '#d1d5db',
-            }}
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          md={8} 
-          sx={{
-            p: 3,
-            overflowY: 'auto',
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Voter Details
-          </Typography>
-
-           <Button
-    variant="outlined"
-    startIcon={<PrintIcon />}
-    onClick={() => window.print()}
-  >
-    Print
-  </Button>
-
-          <Grid container spacing={2}>
-            {(() => {
-              const hiddenFields = [
-                '_id',
-                '__v',
-                'firstName',
-                'middleName',
-                'lastName',
-                'colorCode',
-                'BoothEnglish',
-                'Booth_English',
-                'Booth ( English )',
-              ];
-
-              // 🔹 FIXED PAIRS (each pair = one row)
-              const orderedPairs = [
-                ['corporation', 'wardNumber'],
-                ['voterId', 'name'],
-                ['boothNumber', 'BoothName'],
-                ['srn', 'assemblyNo'],
-                ['houseNo', 'PartNo'],
-                  ['mobileOne', 'mobileTwo'],
-                ['village', null],
-                // ['gender', 'age'], // always last
-              ];
-
-              return orderedPairs.map((pair, rowIndex) =>
-                pair.map((key) => {
-                  if (!key) return null;
-                  if (hiddenFields.includes(key)) return null;
-                  if (!(key in selectedVoter)) return null;
-
-                  const value = selectedVoter[key];
-
-                  return (
-                    <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-                      <Box
-                        sx={{
-                          p: 1.5,
-                          border: '1px solid #eee',
-                          borderRadius: 1,
-                          height: '100%',
-                        }}
-                      >
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: 'text.secondary',
-                            textTransform: 'capitalize',
-                          }}
-                        >
-                          {key.replace(/([A-Z])/g, ' $1')}
-                        </Typography>
-
-                        <Typography
-                          variant="body2"
-                          sx={{ fontWeight: 600 }}
-                        >
-                          {String(value || '-')}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  );
-                })
-              );
-            })()}
-          </Grid>
-        </Grid>
-
-      </Grid>
-    )}
-  </DialogContent>
-</Dialog> */}
-
-{/* ---------------------------------- */}
-{/* <Dialog
-  open={openModal}
-  onClose={() => setOpenModal(false)}
-  maxWidth={false}
-  fullWidth
-  PaperProps={{
-    sx: {
-      width: '90%',
-      maxWidth: 1200,
-      borderRadius: 3,
-      overflow: 'hidden',
-    },
-  }}
->
-  <DialogContent sx={{ p: 0 }}>
-    {selectedVoter && (
-      <Box>
-
-      
-        <Box
-          sx={{
-            bgcolor: '#1e40af',
-            color: '#fff',
-            px: 3,
-            py: 2,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              Voter Details
-            </Typography>
-            <Typography variant="caption" sx={{ opacity: 0.8 }}>
-              Election Commission – Voter Information
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button
-              size="small"
-              variant="contained"
-              sx={{ bgcolor: '#fff', color: '#1e40af' }}
-              onClick={() => window.print()}
-            >
-              Print A4
-            </Button>
-
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ borderColor: '#fff', color: '#fff' }}
-              onClick={() => window.print()}
-            >
-              Print Slip
-            </Button>
-          </Box>
-        </Box>
-
-     
-        <Grid container>
-
-         
-          <Grid
-            item
-            xs={12}
-            md={4}
-            sx={{
-              bgcolor: '#f1f5f9',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              py: 4,
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 180,
-                height: 180,
-                bgcolor: '#cbd5e1',
-                fontSize: 48,
-              }}
-            >
-              {selectedVoter.name?.[0] || 'V'}
-            </Avatar>
-          </Grid>
-
-         
-          <Grid item xs={12} md={8} sx={{ p: 3 }}>
-            <Grid container spacing={2}>
-              {(() => {
-                const hiddenFields = [
-                  '_id',
-                  '__v',
-                  'firstName',
-                  'middleName',
-                  'lastName',
-                  'colorCode',
-                ];
-
-                const orderedPairs = [
-                  ['corporation', 'wardNumber'],
-                  ['voterId', 'name'],
-                  ['boothNumber', 'BoothName'],
-                  ['srn', 'assemblyNo'],
-                  ['houseNo', 'PartNo'],
-                  ['mobileOne', 'mobileTwo'],
-                  ['village', null],
-                ];
-
-                return orderedPairs.map((pair, rowIndex) =>
-                  pair.map((key) => {
-                    if (!key) return null;
-                    if (hiddenFields.includes(key)) return null;
-                    if (!(key in selectedVoter)) return null;
-
-                    return (
-                      <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-                        <Box
-                          sx={{
-                            border: '1px solid #e5e7eb',
-                            borderRadius: 2,
-                            p: 1.5,
-                            bgcolor: '#fff',
-                          }}
-                        >
-                          <Typography
-                            variant="caption"
-                            sx={{ color: '#6b7280' }}
-                          >
-                            {key.replace(/([A-Z])/g, ' $1')}
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            fontWeight={600}
-                          >
-                            {selectedVoter[key] || '-'}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    );
-                  })
-                );
-              })()}
-            </Grid>
-          </Grid>
-        </Grid>
-
-      </Box>
-    )}
-  </DialogContent>
-</Dialog> */}
-{/* ================================== */}
 <Dialog
   open={openModal}
   onClose={() => setOpenModal(false)}
@@ -1534,7 +1027,7 @@ width: {
         >
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              Voter Details
+              Voter Details - 1
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.85 }}>
               Election Commission – Voter Information
@@ -1542,31 +1035,7 @@ width: {
           </Box>
 
           <Box sx={{ display: 'flex', gap: 1 }}>
-            {/* <Button
-              size="small"
-              variant="contained"
-              sx={{ bgcolor: '#fff', color: '#1e40af' }}
-              onClick={() => window.print()}
-            >
-              Print A4
-            </Button>
-
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ borderColor: '#fff', color: '#fff' }}
-              onClick={() => window.print()}
-            >
-              Print Slip
-            </Button> */}
-            {/* <Button
-  size="small"
-  variant="contained"
-  sx={{ bgcolor: '#fff', color: '#1e40af' }}
-  onClick={handlePrintA4}
->
-  Print A4
-</Button> */}
+           
 
 <Button
   size="small"
@@ -1759,46 +1228,7 @@ width: {
           if (!(key in selectedVoter)) return null;
 
           return (
-            // <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-            //   <Box sx={{ py: 0.5 }}>
-            //     <Typography
-            //       variant="caption"
-            //       sx={{
-            //         color: '#6b7280',
-            //         letterSpacing: '0.05em',
-            //         fontSize: '11px',
-            //       }}
-            //     >
-            //       {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
-            //     </Typography>
-
-            //     <Typography
-            //       variant="body2"
-            //       sx={{
-            //         fontWeight: 600,
-            //         color: '#111827',
-            //         display: 'flex',
-            //         alignItems: 'center',
-            //         gap: 1,
-            //       }}
-            //     >
-            //       {selectedVoter[key] || '-'}
-
-            //       {/* 🔥 DUBAR FLAG */}
-            //       {key === 'village' && selectedVoter.flag === 'twice' && (
-            //         <span
-            //           style={{
-            //             color: 'red',
-            //             fontWeight: 700,
-            //             fontSize: '13px',
-            //           }}
-            //         >
-            //           DUBAR
-            //         </span>
-            //       )}
-            //     </Typography>
-            //   </Box>
-            // </Grid>
+            
 
 
             <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
@@ -1891,27 +1321,6 @@ width: {
 
 
 
-{/* <Dialog
-  open={imageModalOpen}
-  onClose={() => setImageModalOpen(false)}
-  maxWidth="sm"
-  fullWidth
->
-  <DialogContent sx={{ textAlign: 'center', p: 2 }}>
-    <img
-      src={imageUrl}
-      alt="Voter"
-      style={{
-        width: '100%',
-        maxHeight: '80vh',
-        objectFit: 'contain',
-      }}
-      onError={(e) => {
-        e.target.src = '/images/no-image.jpg';
-      }}
-    />
-  </DialogContent>
-</Dialog> */}
 
 
 
@@ -1950,7 +1359,7 @@ width: {
         >
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              Voter Details
+              Voter Details -2
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.85 }}>
               Election Commission – Voter Information
@@ -1958,31 +1367,7 @@ width: {
           </Box>
 
           <Box sx={{ display: 'flex', gap: 1 }}>
-            {/* <Button
-              size="small"
-              variant="contained"
-              sx={{ bgcolor: '#fff', color: '#1e40af' }}
-              onClick={() => window.print()}
-            >
-              Print A4
-            </Button>
-
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ borderColor: '#fff', color: '#fff' }}
-              onClick={() => window.print()}
-            >
-              Print Slip
-            </Button> */}
-            {/* <Button
-  size="small"
-  variant="contained"
-  sx={{ bgcolor: '#fff', color: '#1e40af' }}
-  onClick={handlePrintA4}
->
-  Print A4
-</Button> */}
+           
 
 <Button
   size="small"
