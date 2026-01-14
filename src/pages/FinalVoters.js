@@ -109,11 +109,54 @@ const checkImageExists = (voterId) => {
 
 
 const columns = (handleDelete, handleEdit) => [
+  {
+  field: 'voterId',
+  headerName: 'Voter ID',
+  width: 150,
+  renderCell: (params) => {
+    const voterId = params.value;
+
+    return (
+      <span
+        style={{
+          color: '#1976D2',
+          textDecoration: 'underline',
+          fontWeight: 600,
+          cursor: 'pointer',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();              // 🔥 DataGrid row click block
+          setSelectedVoter(params.row);     // ✅ FULL voter object pass
+          setImageModalOpen(true);          // ✅ SAME dialog open
+        }}
+      >
+        {voterId}
+      </span>
+    );
+  },
+},
+ { field: 'name', headerName: 'Name', width: 220 },
   { field: 'srn', headerName: 'Sr No', width: 80 },
+   { field: 'boothNumber', headerName: 'Booth', width: 80 },
+    { field: 'boothName', headerName: 'Booth Name', width: 260 },
+     {
+    field: 'mobileOne',
+    headerName: 'Mobile 1',
+    width: 140,
+    renderCell: (p) => p.value || '-',
+  },
+  {
+    field: 'mobileTwo',
+    headerName: 'Mobile 2',
+    width: 140,
+    renderCell: (p) => p.value || '-',
+  },
+  { field: 'relativeName', headerName: 'Relative Name', width: 200 },
   { field: 'finalSrn', headerName: 'Final Sr No', width: 110 },
   { field: 'corporation', headerName: 'Corporation', width: 150 },
   { field: 'wardNumber', headerName: 'Ward', width: 80 },
-  { field: 'boothNumber', headerName: 'Booth', width: 80 },
+  
+ 
   // { field: 'voterId', headerName: 'Voter ID', width: 150 },
 //   {
 //   field: 'voterId',
@@ -144,54 +187,18 @@ const columns = (handleDelete, handleEdit) => [
 
 // ======================
 
-{
-  field: 'voterId',
-  headerName: 'Voter ID',
-  width: 150,
-  renderCell: (params) => {
-    const voterId = params.value;
-
-    return (
-      <span
-        style={{
-          color: '#1976D2',
-          textDecoration: 'underline',
-          fontWeight: 600,
-          cursor: 'pointer',
-        }}
-        onClick={(e) => {
-          e.stopPropagation();              // 🔥 DataGrid row click block
-          setSelectedVoter(params.row);     // ✅ FULL voter object pass
-          setImageModalOpen(true);          // ✅ SAME dialog open
-        }}
-      >
-        {voterId}
-      </span>
-    );
-  },
-},
 
 
-  { field: 'name', headerName: 'Name', width: 220 },
-  { field: 'relativeName', headerName: 'Relative Name', width: 200 },
+
+ 
+  
   { field: 'gender', headerName: 'Gender', width: 80 },
   { field: 'age', headerName: 'Age', width: 70 },
   { field: 'village', headerName: 'Village', width: 160 },
   // { field: 'colorCode', headerName: 'Color', width: 100 },
-  {
-    field: 'mobileOne',
-    headerName: 'Mobile 1',
-    width: 140,
-    renderCell: (p) => p.value || '-',
-  },
-  {
-    field: 'mobileTwo',
-    headerName: 'Mobile 2',
-    width: 140,
-    renderCell: (p) => p.value || '-',
-  },
+ 
   { field: 'houseNo', headerName: 'Address', width: 260 },
-  { field: 'boothName', headerName: 'Booth Name', width: 260 },
+ 
   {
     field: 'actions',
     headerName: 'Actions',
@@ -2056,11 +2063,11 @@ width: {
                 const orderedPairs = [
                   ['corporation', 'wardNumber'],
                   ['voterId', 'name'],
-                  ['boothNumber', 'boothName'],
+                  ['boothNumber', 'village'],
                   ['srnNo', 'assemblyNo'],
                   ['houseNo', 'PartNo'],
                   ['mobileOne', 'mobileTwo'],
-                  ['village', "flag"],
+                  ['boothName', "flag"],
                 ];
 
                 return orderedPairs.map((pair, rowIndex) =>
@@ -2160,17 +2167,28 @@ width: {
 // </Grid>
 
 
-
+// =============================
 
 
 <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-  <Box sx={{ py: 0.5 }}>
+  {/* <Box sx={{ 
+    py: 0.5,
+      display: 'flex',         
+      alignItems: 'center',
+      gap: 1.5,
+    }}>
     <Typography
+   
       variant="caption"
       sx={{
-        color: '#6b7280',
-        letterSpacing: '0.05em',
-        fontSize: '11px',
+        color: '#374151',      
+    fontWeight: 600,        
+    letterSpacing: '0.04em',
+    fontSize: '13px',      
+    textTransform: 'uppercase',
+     border:"2px solid white",
+     whiteSpace: 'nowrap',   // 🔥 LABEL ekach line
+    display: 'inline-block' // 🔥 wrap band
       }}
     >
       {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
@@ -2180,18 +2198,76 @@ width: {
       variant="body2"
       sx={{
         fontWeight: 600,
-        color: key === 'flag' ? 'red' : '#111827',
+        color: key === 'flag' ? 'red' : '#000',  
+
       }}
     >
-      {/* 🔥 FLAG LOGIC */}
+   
       {key === 'flag'
         ? selectedVoter.flag === 'twice'
           ? 'DUBAR'
           : null
         : selectedVoter[key] || '-'}
     </Typography>
-  </Box>
+  </Box> */}
+
+
+  <Box
+  sx={{
+    py: 0.5,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1.5,
+    width: '100%',
+  }}
+>
+  {/* 🔹 LABEL – 40% */}
+  <Typography
+    variant="caption"
+    sx={{
+      color: '#374151',
+      fontWeight: 600,
+      letterSpacing: '0.04em',
+      fontSize: '13px',
+      textTransform: 'uppercase',
+
+      width: '35%',            // 🔥 40%
+   
+     
+    }}
+  >
+    {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+  </Typography>
+
+  {/* 🔹 VALUE – 60% */}
+  <Typography
+    variant="body2"
+    sx={{
+      fontWeight: 600,
+      color: key === 'flag' ? 'red' : '#000',
+
+      width: '55%',            // 🔥 60%
+      
+    }}
+  >
+    {key === 'flag'
+      ? selectedVoter.flag === 'twice'
+        ? 'DUBAR'
+        : null
+      : selectedVoter[key] || '-'}
+  </Typography>
+</Box>
+
 </Grid>
+
+
+
+
+
+
+
+
+
 
 
 
