@@ -49,6 +49,9 @@ import finvoters from '../data/finalvoters.json';
 // import imagesvoters from '../Images/voterimages';
 
 import { Checkbox, FormControlLabel} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+// import IconButton from '@mui/material/IconButton';
+
 
 console.log("Length:", finvoters?.length);
 
@@ -659,6 +662,15 @@ width: {
   Print Slip
 </Button>
 
+
+<IconButton
+     size="large"
+    onClick={() => setOpenModal(false)}
+    sx={{ color: '#fff' }}
+  >
+    <CloseIcon />
+  </IconButton>
+
           </Box>
         </Box>
 
@@ -1154,7 +1166,7 @@ width: {
         >
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              Voter Details
+              Voter Details -1
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.85 }}>
               Election Commission – Voter Information
@@ -1172,6 +1184,14 @@ width: {
 >
   Print Slip
 </Button>
+
+
+  <IconButton
+    onClick={() =>setImageModalOpen(false)}   // किंवा setImageModalOpen(false)
+    sx={{ color: '#fff' }}
+  >
+    <CloseIcon />
+  </IconButton>
 
           </Box>
         </Box>
@@ -1398,15 +1418,15 @@ width: {
   variant="body2"
   sx={{
     fontWeight: 600,
-    color: key === 'flags' ? 'red' : '#000',
+    color: key === 'flag' ? 'red' : '#000',
     width: '55%',
   }}
 >
-  {key === 'flags'
-    ? selectedVoter.flags === 'twice'
-      ? 'DUBAR'
-      : '-'
-    : selectedVoter[key] || '-'}
+{key === 'flag'
+      ? selectedVoter.flag === 'twice'
+        ? 'DUBAR'
+        : null
+      : selectedVoter[key] || '-'}
 </Typography>
 </Box>
 
