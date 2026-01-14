@@ -989,7 +989,7 @@ width: {
 
 
 
-          <Button
+          {/* <Button
             startIcon={<DownloadIcon />}
             onClick={downloadVoterReport}
               size='lg'
@@ -1000,7 +1000,7 @@ width: {
             }}
           >
             Download
-          </Button>
+          </Button> */}
 
          
         </Box>
