@@ -127,34 +127,27 @@ const handleVisitedChange = (e) => {
 };
 
 
+
+ useEffect(() => {
+    if (selectedVoter) {
+      setChecked(!!selectedVoter.voterVisited);
+    }
+  }, [selectedVoter]);
+
+useEffect(() => {
+  if (selectedVoter) {
+    setCheckedEle(!!selectedVoter.voterVisited);
+  }
+}, [selectedVoter]);
+
+const storedResdata = JSON.parse(localStorage.getItem("resdata") || "{}");
+const userRole = storedResdata?.user?.role || "";
+
+
+
+
+
 const columns = (handleDelete, handleEdit) => [
-//   {
-//   field: 'voterId',
-//   headerName: 'Voter ID',
-//   width: 150,
-//   renderCell: (params) => {
-//     const voterId = params.value;
-
-//     return (
-//       <span
-//         style={{
-//           color: '#1976D2',
-//           textDecoration: 'underline',
-//           fontWeight: 600,
-//           cursor: 'pointer',
-//         }}
-//         onClick={(e) => {
-//           e.stopPropagation();              // 🔥 DataGrid row click block
-//           setSelectedVoter(params.row);     // ✅ FULL voter object pass
-//           setImageModalOpen(true);          // ✅ SAME dialog open
-//         }}
-//       >
-//         {voterId}
-//       </span>
-//     );
-//   },
-// },
-
 {
   field: 'voterId',
   headerName: 'Voter ID',
@@ -224,17 +217,7 @@ const columns = (handleDelete, handleEdit) => [
  
   { field: 'houseNo', headerName: 'Address', width: 260 },
  
-  // {
-  //   field: 'actions',
-  //   headerName: 'Actions',
-  //   width: 120,
-  //   sortable: false,
-  //   renderCell: (params) => (
-  //     <Box sx={{ display: 'flex', gap: 1 }}>
-       
-  //     </Box>
-  //   ),
-  // },
+ 
 ];
 
   
@@ -469,6 +452,7 @@ const handlePrintSlip = () => {
       
 
          
+           {/* <Typography style={{color:'blue'}}>{userRole}</Typography> */}
          
 
 <TextField
@@ -605,7 +589,8 @@ width: {
   let cls = params.row.flag === "twice" ? "twice-voter-row" : "";
   // if (params.row.voterVisited === true) cls += " visited-voter-row";
   return cls;
-}}
+}
+}
 
           />
         </Paper>
@@ -693,16 +678,7 @@ width: {
             }}
           >
           
-         {/* <img
-    src={dummyUser}
-    alt="logo"
-    style={{
-      width: '95%',
-      maxWidth: '100%',
-      height: 'auto',
-      objectFit: 'contain',
-    }}
-  /> */}
+        
 
 
 <img
@@ -725,192 +701,14 @@ width: {
 
           </Grid>
 
-        
-          {/* <Grid item xs={12} md={8} sx={{ p: 4 }}>
-            <Grid container spacing={2}>
-              {(() => {
-                const hiddenFields = [
-                  '_id',
-                  '__v',
-                  'firstName',
-                  'middleName',
-                  'lastName',
-                  'colorCode',
-                ];
-
-                const orderedPairs = [
-                  ['corporation', 'wardNumber'],
-                  ['voterId', 'name'],
-                  ['boothNumber', 'boothName'],
-                  ['srnNo', 'assemblyNo'],
-                  ['houseNo', 'PartNo'],
-                  ['mobileOne', 'mobileTwo'],
-                  ['village', null],
-                ];
-
-                  // return orderedPairs.map((pair, rowIndex) =>
-                  //   pair.map((key) => {
-                  //     if (!key) return null;
-                  //     if (hiddenFields.includes(key)) return null;
-                  //     if (!(key in selectedVoter)) return null;
-
-
-
-
-
-
-
-
-  return orderedPairs.map((pair, rowIndex) =>
-        pair.map((key) => {
-          // 🔥 HANDLE null + flag logic
-          const displayKey =
-            key === null && selectedVoter.flag === "twice"
-              ? "flag"
-              : key;
-
-          if (!displayKey) return null;
-          if (hiddenFields.includes(displayKey)) return null;
-
-
-
-
-
-
-
-
-
-                    return (
-                      <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-                        <Box sx={{ py: 0.5 }}>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: '#6b7280',
-                              letterSpacing: '0.05em',
-                              fontSize: '11px',
-                            }}
-                          >
-                            {key
-                              .replace(/([A-Z])/g, ' $1')
-                              .toUpperCase()}
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontWeight: 600,
-                              color: '#111827',
-                            }}
-                          >
-                            {selectedVoter[key] || '-'}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    );
-                  })
-                );
-              })()}
-            </Grid>
-
-          
-            <Box sx={{ mt: 3 }}>
-              <Typography
-                variant="caption"
-                sx={{ color: '#6b7280' }}
-              >
-                This is an official voter information record.
-              </Typography>
-            </Box>
-          </Grid> */}
-
-
-
-          
-
-          {/* <Grid item xs={12} md={8} sx={{ p: 4 }}>
-  <Grid container spacing={2}>
-    {(() => {
-      const hiddenFields = [
-        '_id',
-        '__v',
-        'firstName',
-        'middleName',
-        'lastName',
-        'colorCode',
-      ];
-
-      const orderedPairs = [
-        ['corporation', 'wardNumber'],
-        ['voterId', 'name'],
-        ['boothNumber', 'boothName'],
-        ['srnNo', 'assemblyNo'],
-        ['houseNo', 'PartNo'],
-        ['mobileOne', 'mobileTwo'],
-        ['village', null], // 👈 village row
-      ];
-
-      return orderedPairs.map((pair, rowIndex) =>
-        pair.map((key) => {
-          if (!key) return null;
-          if (hiddenFields.includes(key)) return null;
-          if (!(key in selectedVoter)) return null;
-
-          return (
-            
-
-
-            <Grid item xs={12} sm={6} key={`${key}-${rowIndex}`}>
-  <Box sx={{ py: 0.5 }}>
-    <Typography
-      variant="caption"
-      sx={{
-        color: '#6b7280',
-        letterSpacing: '0.05em',
-        fontSize: '11px',
-      }}
-    >
-      {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
-    </Typography>
-
-    <Typography
-      variant="body2"
-      sx={{
-        fontWeight: 600,
-        color: key === 'flag' ? 'red' : '#111827',
-      }}
-    >
-    
-      {key === 'flag'
-        ? selectedVoter.flag === 'twice'
-          ? 'DUBAR'
-          : null
-        : selectedVoter[key] || '-'}
-    </Typography>
-  </Box>
-
-  
-</Grid>
-
-          );
-        })
-      );
-    })()}
-  </Grid>
-
-  <Box sx={{ mt: 3 }}>
-    <Typography variant="caption" sx={{ color: '#6b7280' }}>
-      This is an official voter information record.
-    </Typography>
-  </Box>
-</Grid> */}
-
-
-
-
   <Grid item xs={12} md={8} sx={{ p: 4 }}>
-    {/* ***** */}
-{/* <FormControlLabel
+    {/* ***** form 11*/}
+
+
+{/* =======>>>>>>>>>>> */}
+
+{/* he uncommit kara approrval aalyavar */}
+{/* <FormControlLabel 
   control={
     <Checkbox
       checked={checked}
@@ -921,7 +719,8 @@ width: {
         try {
           await axios.put(
             `${baseUrl}/getByVisitorAndUpdate/${selectedVoter.voterId}`,
-            { voterId:selectedVoter.voterId,
+            {
+              voterId: selectedVoter.voterId,
               voterVisited: isChecked,
             }
           );
@@ -932,20 +731,19 @@ width: {
               : "ℹ️ Voter Visit Removed"
           );
 
-          // 🔁 local state update (important)
           setSelectedVoter(prev => ({
             ...prev,
             voterVisited: isChecked,
           }));
 
+          fetchVoters();
         } catch (error) {
           toast.error("❌ Failed to update voter");
-
-          // ❌ rollback UI if API fails
           setChecked(!isChecked);
         }
       }}
       sx={{
+        transform: 'scale(2.3)',
         '&.Mui-checked': {
           color: '#16a34a',
         },
@@ -953,11 +751,13 @@ width: {
     />
   }
   label={
-    <Typography sx={{ fontWeight: 600 }}>
+    <Typography sx={{ fontWeight: 600, fontSize: '16px' }}>
       Voter Visited
     </Typography>
   }
 /> */}
+
+
 
 
             <Grid container spacing={2}>
@@ -978,8 +778,12 @@ width: {
                   ['srnNo', 'assemblyNo'],
                   ['houseNo', 'PartNo'],
                   ['mobileOne', 'mobileTwo'],
-                  ['boothName', "flag"],
+                  ['boothName', 'srn',],
+                  ["flag"],
+               
                 ];
+
+                
 
                 return orderedPairs.map((pair, rowIndex) =>
                   pair.map((key) => {
@@ -987,6 +791,10 @@ width: {
                     if (hiddenFields.includes(key)) return null;
                     if (!(key in selectedVoter)) return null;
 
+   // 🔥 FLAG CONDITION
+    if (key === 'flag' && selectedVoter.flag !== 'twice') {
+      return null; // key + value hide
+    }
 
 
 
@@ -1166,7 +974,7 @@ width: {
         >
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              Voter Details -1
+              Voter Details
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.85 }}>
               Election Commission – Voter Information
@@ -1215,16 +1023,7 @@ width: {
             }}
           >
           
-         {/* <img
-    src={dummyUser}
-    alt="logo"
-    style={{
-      width: '95%',
-      maxWidth: '100%',
-      height: 'auto',
-      objectFit: 'contain',
-    }}
-  /> */}
+        
 
 
 <img
@@ -1250,38 +1049,18 @@ width: {
         
           <Grid item xs={12} md={8} sx={{ p: 4 }}>
 
-            {/* <FormControlLabel
-  control={
-    <Checkbox
-      checked={checkedele}
-      onChange={(e) => {
-        setCheckedEle(e.target.checked);
-        if (e.target.checked) {
-          toast.success("✅ Voter Visited");
-        }
-      }}
-      sx={{
-        '&.Mui-checked': {
-          color: '#16a34a',
-        },
-      }}
-    />
-  }
-  label={
-    <Typography sx={{ fontWeight: 600 }}>
-      Voter Visited
-    </Typography>
-  }
-/> */}
+            
 
-{/* ****2 */}
+
+{/* he uncommit kara aaproval aalyavar */}
+
 {/* <FormControlLabel
   control={
     <Checkbox
-      checked={checkedele}
+     checked={checkedele}   
       onChange={async (e) => {
         const isChecked = e.target.checked;
-        setCheckedEle(isChecked);
+        setCheckedEle(isChecked);   
 
         try {
           await axios.put(
@@ -1298,20 +1077,19 @@ width: {
               : "ℹ️ Voter Visit Removed"
           );
 
-          // 🔁 local voter update
           setSelectedVoter(prev => ({
             ...prev,
             voterVisited: isChecked,
           }));
 
+          fetchVoters();
         } catch (error) {
           toast.error("❌ Failed to update voter");
-
-          // ❌ rollback checkbox if API fails
-          setCheckedEle(!isChecked);
+          setChecked(!isChecked);
         }
       }}
       sx={{
+        transform: 'scale(2.3)',
         '&.Mui-checked': {
           color: '#16a34a',
         },
@@ -1319,11 +1097,13 @@ width: {
     />
   }
   label={
-    <Typography sx={{ fontWeight: 600 }}>
+    <Typography sx={{ fontWeight: 600, fontSize: '16px' }}>
       Voter Visited
     </Typography>
   }
 /> */}
+
+
 
 
 
@@ -1377,7 +1157,7 @@ width: {
     width: '100%',
   }}
 >
-  {/* 🔹 LABEL – 40% */}
+ 
   <Typography
     variant="caption"
     sx={{
@@ -1387,7 +1167,7 @@ width: {
       fontSize: '13px',
       textTransform: 'uppercase',
 
-      width: '35%',            // 🔥 40%
+      width: '35%',            
    
      
     }}
@@ -1395,23 +1175,6 @@ width: {
     {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
   </Typography>
 
-  {/* 🔹 VALUE – 60% */}
-  {/* <Typography
-    variant="body2"
-    sx={{
-      fontWeight: 600,
-      color: key === 'flag' ? 'red' : '#000',
-
-      width: '55%',            // 🔥 60%
-      
-    }}
-  >
-    {key === 'flag'
-      ? selectedVoter.flag === 'twice'
-        ? 'DUBAR'
-        : null
-      : selectedVoter[key] || '-'}
-  </Typography> */}
 
 
   <Typography
@@ -1420,6 +1183,8 @@ width: {
     fontWeight: 600,
     color: key === 'flag' ? 'red' : '#000',
     width: '55%',
+
+  
   }}
 >
 {key === 'flag'
@@ -1431,15 +1196,6 @@ width: {
 </Box>
 
 </Grid>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1470,49 +1226,6 @@ width: {
 </Dialog>
 
 
-
-
-{/* ==================================== */}
-
-{/* {showBulkSlips && (
-  <div className="bulk-print-container">
-    {voters.slice(0, 6).map((voter) => (
-      <BulkVoterCard key={voter._id} voter={voter} />
-    ))}
-  </div>
-)} */}
-
-{/* {showBulkSlips && (
-  <div className="bulk-print-container">
-    {voters.slice(0, 6).map((voter) => (
-      <BulkVoterCard key={voter._id} voter={voter} />
-    ))}
-  </div>
-)} */}
-
-
-
-
-{/* {showBulkSlips && (
-  <div className="bulk-print-container">
-    {voters.slice(0, 96).map((voter) => (
-      <BulkVoterCard key={voter._id} voter={voter} />
-    ))}
-  </div>
-)} */}
-
-
-{/* {voters
-  .slice(
-    paginationModel.page * paginationModel.pageSize,
-    paginationModel.page * paginationModel.pageSize + paginationModel.pageSize
-  )
-  .map((voter) => (
-    <BulkVoterCard key={voter._id} voter={voter} />
-  ))}
- */}
-
-
  {showBulkSlips && (
   <div className="bulk-print-container">
     {voters.map((voter) => (
@@ -1523,19 +1236,7 @@ width: {
 
 
  
-{/* {showBulkSlips && (
-  <div className="bulk-print-container">
-    {voters.map((voter) => (
-      <BulkVoterCard key={voter._id} voter={voter} />
-    ))}
-  </div>
-)}  */}
 
-{/* <div id="bulk-slip-container">
-  {voters.map(voter => (
-    <BulkVoterCard key={voter._id} voter={voter} />
-  ))}
-</div> */}
 
     </div>
   );
@@ -1558,6 +1259,7 @@ const StyledDataGrid = styled(DataGrid)(() => ({
     fontWeight: 600,
   },
   '& .MuiDataGrid-row:hover': {
-    backgroundColor: '#e3f2fd !important',
+    backgroundColor: 'rgba(0, 0, 0, 0.01)', // 🔥 sam
+  
   },
 }));

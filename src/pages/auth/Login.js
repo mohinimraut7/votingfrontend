@@ -76,26 +76,7 @@ const Login = () => {
         },
     });
 
-    // **Function to Resend Verification Email**
-    // const handleResendVerification = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const response = await fetch(`${baseUrl}/resend-verification`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({ email: userEmail }),
-    //         });
-
-    //         const data = await response.json();
-    //         setLoading(false);
-    //         toast.success(data.message || "Verification link sent!", { position: "top-center" });
-    //     } catch (error) {
-    //         setLoading(false);
-    //         toast.error("Something went wrong. Please try again.", { position: "top-center" });
-    //     }
-    // };
+   
 
     const handleTogglePassword = () => {
         setShowPassword((prev) => !prev);
@@ -108,8 +89,7 @@ const Login = () => {
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center',
-                // background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                // padding: { xs: 2, sm: 3, md: 4 }
+                
             }}
         >
             <Container className="Auth-Container" maxWidth="sm">
@@ -117,8 +97,8 @@ const Login = () => {
                     <Paper
                         elevation={24}
                         sx={{
-                            // width: { xs: '100%', sm: '90%', md: '85%' },
-                            // margin: 'auto',
+                            width: { xs: '70%', sm: '70%', md: '55%' },
+                            margin: 'auto',
                             padding: { xs: '20px', sm: '30px', md: '20px' },
                             borderRadius: { xs: '16px', sm: '20px' },
                             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
@@ -130,52 +110,11 @@ const Login = () => {
                         component='form'
                         onSubmit={formik.handleSubmit}
                     >
-                        {/* Logo Section */}
-                        {/* <Box sx={{ 
-                            display: 'flex', 
-                            justifyContent: 'center', 
-                            alignItems: 'center',
-                            mb: { xs: 3, sm: 4 }
-                        }}>
-                            <Box sx={{ 
-                                width: { xs: '120px', sm: '140px', md: '100px' }, 
-                                height: { xs: '120px', sm: '140px', md: '100px' },
-                                borderRadius: '50%',
-                                overflow: 'hidden',
-                                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.2)',
-                                border: '4px solid rgba(255, 255, 255, 0.3)',
-                                transition: 'transform 0.3s ease',
-                                '&:hover': {
-                                    transform: 'scale(1.05)'
-                                }
-                            }}>
-                                <img 
-                                    src={vvcmclogo} 
-                                    height='100%' 
-                                    width='100%' 
-                                    alt="Logo"
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            </Box>
-                        </Box> */}
+                       
 
-                        {/* Welcome Text */}
+                        
                         <Box sx={{ textAlign: 'center', mb: { xs: 3, sm: 4 } }}>
-                            {/* <Typography 
-                                variant="h4" 
-                                sx={{ 
-                                    fontWeight: 'bold', 
-                                    color: '#333',
-                                    mb: 1,
-                                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' },
-                                    background: 'linear-gradient(135deg, #4caf50, #45a049)',
-                                    backgroundClip: 'text',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent'
-                                }}
-                            >
-                                Welcome Back
-                            </Typography> */}
+                            
                             <Typography 
                                  variant="h4" 
                                 sx={{ 
@@ -197,7 +136,7 @@ const Login = () => {
 
                                {/* Email Field */}
                         <TextField
-                        size="small"
+                        size="lg"
                             fullWidth
                             id="email"
                             name="email"
@@ -215,7 +154,7 @@ const Login = () => {
                                 },
                             }}
                             sx={{
-                                  width: '80%',
+                                  width: '90%',
                                 '& .MuiOutlinedInput-root': {
                                     borderRadius: '12px',
                                     backgroundColor: '#f8f9fa',
@@ -248,7 +187,7 @@ const Login = () => {
 
                         {/* Password Field */}
                         <TextField
-                        size="small"
+                        size="lg"
                             fullWidth
                             id="password"
                             name="password"
@@ -286,7 +225,7 @@ const Login = () => {
                                 ),
                             }}
                             sx={{
-                                width: '80%',
+                                width: '90%',
                                 '& .MuiOutlinedInput-root': {
                                     borderRadius: '12px',
                                     backgroundColor: '#f8f9fa',
@@ -320,12 +259,7 @@ const Login = () => {
 
                      
 
-                        {/* CAPTCHA */}
-                        {/* <Box> 
-                            <MathCaptcha onValidate={setCaptchaValid} />
-                        </Box> */}
-
-                        {/* Error Message */}
+                       
                         {authError && (
                             <Fade in={Boolean(authError)}>
                                 <Paper 
@@ -354,40 +288,7 @@ const Login = () => {
                         )}
 
                      
-                        {/* {showResend && (
-                            <Fade in={showResend}>
-                                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
-                                    <Typography
-                                        component="button"
-                                        type="button"
-                                        className="anchorverificationlink"
-                                        onClick={handleResendVerification}
-                                        sx={{
-                                            background: 'none',
-                                            border: 'none',
-                                            color: '#4caf50',
-                                            textDecoration: 'underline',
-                                            cursor: 'pointer',
-                                            fontSize: { xs: '12px', sm: '14px' },
-                                            fontWeight: 500,
-                                            padding: '8px 16px',
-                                            borderRadius: '8px',
-                                            transition: 'all 0.3s ease',
-                                            '&:hover': {
-                                                color: '#45a049',
-                                                fontWeight: 'bold',
-                                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                                                transform: 'translateY(-1px)'
-                                            }
-                                        }}
-                                    >
-                                        Resend Verification Link
-                                    </Typography>
-                                </Box>
-                            </Fade>
-                        )} */}
-
-                        {/* Loading Animation */}
+                     
                         {loading && (
                             <Fade in={loading}>
                                 <Box sx={{ 
@@ -410,9 +311,9 @@ const Login = () => {
                                 variant="contained"
                                 color="primary"
                                 className='Auth-Button'
-                                size="small"
+                                size="lg"
                                 sx={{
-                                    width: { xs: '100%', sm: '80%' },
+                                    width: { xs: '100%', sm: '90%' },
                                     // py: { xs: 1.5, sm: 2 },
                                     borderRadius: '12px',
                                     fontSize: { xs: '14px', sm: '16px' },
@@ -481,9 +382,9 @@ const Login = () => {
                             <Button
                                 variant="outlined"
                                 // className='Auth-Button-Signup'
-                                size="small"
+                                size="lg"
                                 sx={{
-                                    width: { xs: '100%', sm: '80%' },
+                                    width: { xs: '100%', sm: '90%' },
                                     // py: { xs: 1.5, sm: 2 },
                                     borderRadius: '12px',
                                     fontSize: { xs: '12px', sm: '14px' },
@@ -517,7 +418,7 @@ const Login = () => {
                                         },
                                     }}
                                 >
-                                    Create new account
+                                    Create New Account
                                 </Typography>
                             </Button>
                         </Box>

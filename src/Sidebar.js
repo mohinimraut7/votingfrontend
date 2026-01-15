@@ -40,6 +40,10 @@ export default function Sidebar() {
   const location = useLocation();
   const dispatch = useDispatch();
 
+
+  const storedResdata = JSON.parse(localStorage.getItem("resdata") || "{}");
+const userRole = storedResdata?.user?.role || "";
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const isAuthPage =
@@ -74,7 +78,7 @@ export default function Sidebar() {
           </Box> */}
 
           {/* CENTER GREEN NAV */}
-       
+          
             <Box
               sx={{
                 width: isMobile?'100%':'70%',
@@ -89,7 +93,8 @@ export default function Sidebar() {
               }}
             >
               <Box sx={{ display: 'flex', gap: 3 }}>
-                {menuItems.map((item) => (
+                <>
+                 {menuItems.map((item) => (
                   <Typography
                     key={item.path}
                     onClick={() => navigate(item.path)}
@@ -113,8 +118,13 @@ export default function Sidebar() {
                     {item.label}
                   </Typography>
                 ))}
-              </Box>
+             
+                </>
+               
 
+
+                
+              </Box>
               <Button
                 onClick={handleLogout}
                 sx={{
@@ -128,7 +138,8 @@ export default function Sidebar() {
                 Logout
               </Button>
             </Box>
-          
+       
+       
 
           {/* RIGHT (mobile logout only) */}
         
