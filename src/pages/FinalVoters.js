@@ -587,7 +587,7 @@ width: {
             pageSizeOptions={[10, 50,96,100]}
           getRowClassName={(params) => {
   let cls = params.row.flag === "twice" ? "twice-voter-row" : "";
-  // if (params.row.voterVisited === true) cls += " visited-voter-row";
+  if (params.row.voterVisited === true) cls += " visited-voter-row";
   return cls;
 }
 }
@@ -708,7 +708,7 @@ width: {
 {/* =======>>>>>>>>>>> */}
 
 {/* he uncommit kara approrval aalyavar */}
-{/* <FormControlLabel 
+<FormControlLabel 
   control={
     <Checkbox
       checked={checked}
@@ -755,7 +755,7 @@ width: {
       Voter Visited
     </Typography>
   }
-/> */}
+/>
 
 
 
@@ -1054,7 +1054,7 @@ width: {
 
 {/* he uncommit kara aaproval aalyavar */}
 
-{/* <FormControlLabel
+<FormControlLabel
   control={
     <Checkbox
      checked={checkedele}   
@@ -1101,7 +1101,7 @@ width: {
       Voter Visited
     </Typography>
   }
-/> */}
+/>
 
 
 
